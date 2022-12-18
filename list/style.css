@@ -1,0 +1,260 @@
+/* overall section ~start~ */
+@font-face {
+	font-family : MPLUS1p;
+	src : url("M_PLUS_1p/MPLUS1p-Regular.ttf") format("truetype");
+}
+
+@font-face {
+	font-family : MPLUS1p;
+	src : url("M_PLUS_1p/MPLUS1p-ExtraBold.ttf") format("truetype");
+	font-weight : bold;
+}
+
+html {
+	background-color : LightSlateGrey;
+	font-family : MPLUS1p;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+body {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+a {
+	text-decoration: none;
+}
+/* overall section ~end~ */
+
+/* inputs ~start~ */
+#input {
+	width : 94vw;
+	padding : 1vw 1vw;
+	margin : 1.5vw 2vw;
+	height : 6vw;
+	font-size : 4.2vw;
+	line-height : auto;
+}
+
+.singer_container {
+	height : 6vw;
+	font-size : 4.8vw;
+	text-align : center;
+}
+
+.singer_select {
+	display: inline-block;
+	width : 28vw;
+	text-align : center;
+}
+
+.sing_sel_2.selected {
+	font-weight : bold;
+	color : #AC424A;
+}
+
+.sing_sel_1.selected {
+	font-weight : bold;
+	color : #FDCCD3;
+}
+
+.sing_sel_0.selected {
+	font-weight : bold;
+	color : #C2CAF3;
+}
+
+.singer_select:not(.selected) {
+	color : LightGrey;
+}
+/* inputs ~end~ */
+
+/* song title ~start~ */
+.song_name_container {
+	background-color : LightYellow;
+	padding : 0vw 1vw;
+	margin : 1.5vw 0.5vw;
+	text-align : center;
+	display: flex;
+}
+
+.song_rap{
+	flex-grow: 1;
+}
+
+.song_name {
+	font-weight : bold;
+	font-size : 6vw;
+}
+
+.song_credit:not(.long_credit) {
+	font-size : 3.2vw;
+}
+
+.song_credit.long_credit {
+	font-size : 2.4vw;
+}
+
+.song_fold_open {
+	content : url("list_up.png");
+	width : 32px;
+	height : 32px;
+	align-items : center;
+	margin: 5px 5px 5px 0;
+}
+
+.song_fold_close {
+	content : url("list_down.png");
+	width : 32px;
+	height : 32px;
+	align-items : center;
+	margin: 5px 5px 5px 0;
+}
+/* song title ~end~ */
+
+/* song entry ~start~ */
+.entry_container {
+	font-weight : bold;
+	font-size : 3.6vw;
+	padding : 1vw;
+	margin : 1.5vw;
+}
+
+.entry_primary {
+	display : flex;
+}
+
+.entry_date {
+	flex-grow: 1;
+	width : 38%;
+}
+
+.entry_singer {
+	flex-grow: 1;
+	width : 38%;
+}
+
+.mem_display {
+	width : 18%;
+}
+
+.entry_note {
+	font-size : 2.7vw;
+}
+/* song entry ~end~ */
+/* singer colour palette ~start~ */
+/* kirara (4)*/
+.singer_4 {
+	background-color : LightCoral;
+	border-color : Maroon;
+}
+.singer_4>a {
+	color : Maroon !important;
+}
+.singer_4m {
+	background-color : Maroon;
+	border-color : LightCoral;
+}
+.singer_4m>a {
+	color : LightCoral !important;
+}
+/* momo (2) */
+.singer_2 {
+	background-color : LightPink;
+	border-color : DarkMagenta;
+}
+.singer_2>a {
+	color : DarkMagenta !important;
+}
+.singer_2m {
+	background-color : DarkMagenta;
+	border-color : LightPink;
+}
+.singer_2m>a {
+	color : LightPink !important;
+}
+/* nia (1) */
+.singer_1 {
+	background-color : PaleTurquoise;
+	border-color : DarkBlue;
+}
+.singer_1>a {
+	color : DarkBlue !important;
+}
+.singer_1m {
+	background-color : DarkBlue;
+	border-color : PaleTurquoise;
+}
+.singer_1m>a {
+	color : PaleTurquoise !important;
+}
+
+/* momokira (6) */
+.singer_6 {
+	background-color : MediumOrchid;
+	border-color : Indigo;
+}
+.singer_6>a {
+	color : Indigo !important;
+}
+/* kirania (5) */
+.singer_5 {
+	background-color : FireBrick;
+	border-color : LightBlue;
+}
+.singer_5>a {
+	color : LightBlue !important;
+}
+/* momonia (3) */
+.singer_3 {
+	background-color : LightBlue;
+	border-color : DarkMagenta;
+}
+.singer_3>a {
+	color : DarkMagenta !important;
+}
+
+/* puticoco (7) */
+.singer_7 {
+	background-color : BlueViolet;
+	border-color : Azure;
+}
+.singer_7>a {
+	color : Azure !important;
+}
+
+/* yuco (8) */
+.singer_8 {
+	background-color : Plum;
+	border-color : RoyalBlue;
+}
+.singer_8>a {
+	color : RoyalBlue !important;
+}
+.singer_8m {
+	background-color : RoyalBlue;
+	border-color : Plum;
+}
+.singer_8m>a {
+	color : Plum !important;
+}
+/* chui (9) */
+.singer_9 {
+	background-color : Gold;
+	border-color : FireBrick;
+}
+.singer_9>a {
+	color : FireBrick !important;
+}
+.singer_9m {
+	background-color : FireBrick;
+	border-color : Gold;
+}
+.singer_9m>a {
+	color : Gold !important;
+}
+/* singer colour palette ~end~ */
