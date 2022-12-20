@@ -37,6 +37,7 @@ var display_order = [
 	8,		// 1111
 ];
 
+// series search
 var series_lookup = {
 	"マクロス" : ["マクロス", "まくろす"],
 	"ラブライブ" : ["ラブライブ", "らぶらいぶ", "LL", "ll"],
@@ -47,6 +48,25 @@ var series_lookup = {
 	"Disney" : ["Disney", "ディズニー", "でぃずにー"],
 	"ジブリ" : ["ジブリ", "じぶり"]
 }
+
+// indices lookup
+var entry_idx = {
+	song_id : 0,
+	video : 1,
+	note : 2,
+	time : 3,
+	type : 4
+};
+var song_idx = {
+	name : 0,
+	artist : 1,
+	reading : 2,
+	attr : 3
+};
+var video_idx = {
+	id : 0,
+	date : 1
+};
 
 // stores whats currently looking up
 var loading = "";
@@ -72,7 +92,7 @@ $(document).ready(function() {
 $(function() {
 	// return to top of page (anchor to top does not work as nav bar exists)
 	$(document).on("click", "#nav_to_top", function() {
-		$('html,body').scrollTop(0);
+		$('html,body').animate({ scrollTop: 0 }, "fast");
 	});
 	
 	// search
@@ -119,35 +139,28 @@ $(function() {
 	});
 	
 	// hide song
-	$(document).on("click", ".song_name_container", function() {
-		var e = parseInt($(this).attr("id"));
-		if(!hide_song.includes(e)){
-			hide_song.push(e);
-		}else{
-			hide_song.splice(hide_song.indexOf(e), 1);
+	$(document).on("click", ".song_name_container", function(e) {
+		if (!$(e.target).hasClass("song_copy_icon")) {
+			var f = parseInt($(this).attr("id"));
+			if(!hide_song.includes(f)){
+				hide_song.push(f);
+			}else{
+				hide_song.splice(hide_song.indexOf(f), 1);
+			}
+			if (loading === "") {
+				return;
+			}
+			$(".song_" + f).toggleClass("hidden");
+			$("#fold_" + f).toggleClass("closed");
 		}
-		if (loading === "") {
-			return;
-		}
-		$(".song_" + e).toggleClass("hidden");
-		$("#fold_" + e).toggleClass("closed");
 	})
+
+	// copy song info
+	$(document).on("click", ".song_copy_icon", function() {
+		var e = parseInt($(this).attr("id").replace("copy_name_", ""));
+		navigator.clipboard.writeText(song[e][song_idx.name]);
+	});
 });
-
-// display date in yyyy-MM-dd format
-function display_date(input) {
-	var e = new Date(input);
-	return (e.getFullYear() + "-" + fill_digit(e.getMonth() + 1, 2) + "-" + fill_digit(e.getDate(), 2));
-}
-
-// add 0 in front of a number
-function fill_digit(input, target_length) {
-	e = "" + input;
-	while (e.length < target_length) {
-		e = "0" + e;
-	}
-	return e;
-}
 
 var hits = new Array(max_display);
 var hit_counter = 0;
@@ -181,19 +194,18 @@ function search() {
 	for (var i = 1; i < song.length; ++i) {
 		if (searching_song_name) {
 			if (series_name !== "") {
-				if (song[i].reading.includes(series_name) || song[i].attr.includes(series_name)) {
+				if (song[i][song_idx.reading].includes(series_name) || song[i][song_idx.attr].includes(series_name)) {
 					f[counter++] = i;
 				}
 			} else {
-				if (song[i].name.toLowerCase().includes(e.toLowerCase()) ||
-					song[i].reading.toLowerCase().includes(e.toLowerCase())
+				if (song[i][song_idx.name].toLowerCase().includes(e.toLowerCase()) ||
+					song[i][song_idx.reading].toLowerCase().includes(e.toLowerCase())
 				) {
 					f[counter++] = i;
 				}
 			}
 		} else {
-			if (song[i].credit.toLowerCase().includes(e.toLowerCase())
-			) {
+			if (song[i][song_idx.artist].toLowerCase().includes(e.toLowerCase())) {
 				f[counter++] = i;
 			}
 		}
@@ -205,7 +217,7 @@ function search() {
 	for (var i = 0; i < counter; ++i) {
 		// defintly improve here not to do a 2d search
 		for (var j = 0; j < entry.length; ++j) {
-			if (f[i] === entry[j].song) {
+			if (f[i] === entry[j][entry_idx.song_id]) {
 				if (is_private(j)) {
 					continue;
 				}
@@ -238,37 +250,40 @@ function update_display() {
 	for (var i = 0; i < hit_counter; ++i) {
 		// check if all member
 		if (sel_member !== 7) {
-			if (!(sel_member & entry[hits[i]].type)) {
+			if (!(sel_member & entry[hits[i]][entry_idx.type])) {
 				continue;
 			}
 		}
 		// if new song
-		if (current_song !== entry[hits[i]].song) {
+		if (current_song !== entry[hits[i]][entry_idx.song_id]) {
 			new_html += ((current_song !== -1 ? "</div>" : "") + "<div class=\"song_container\">");
-			current_song = entry[hits[i]].song;
+			current_song = entry[hits[i]][entry_idx.song_id];
 			loaded_song[loaded_count++] = current_song;
 			// if hide the song
 			var show = !hide_song.includes(current_song);
 			new_html += (
 			"<div class=\"song_name_container " + (loaded_count % 2 === 0 ? "odd_colour" : "even_colour") + "\" id=\"" + current_song + "\">" +
 				"<div class=\"song_rap\">" +
-					"<div class=\"song_name\">" + song[entry[hits[i]].song].name + "</div>" +
-					(show ? ("<div class=\"song_credit" + (song[entry[hits[i]].song].credit.length > 30 ? " long_credit" : "") + " song_" + current_song + "\">" + song[entry[hits[i]].song].credit + "</div>") : "") +
+					"<div class=\"song_name\">" + song[current_song][song_idx.name] + "</div>" +
+					(show ? ("<div class=\"song_credit" + (song[current_song][song_idx.artist].length > 30 ? " long_credit" : "") + " song_" + current_song + "\">" + song[current_song][song_idx.artist] + "</div>") : "") +
 				"</div>" +
-				"<div id=\"fold_" + current_song + "\" class=\"song_fold_icon" + (show ? "" : " closed") + "\"></div>" +
+				"<div class=\"song_icon_container\">" +
+					"<div id=\"fold_" + current_song + "\" class=\"song_fold_icon" + (show ? "" : " closed") + "\"></div>" +
+					"<div id=\"copy_name_" + current_song + "\" class=\"song_copy_icon song_" + current_song + "\"></div>" +
+				"</div>" +
 			"</div>");
 		}
-		var is_mem = entry[hits[i]].note.includes("【メン限");
-		var no_note = entry[hits[i]].note === "" || entry[hits[i]].note === "【メン限】" || entry[hits[i]].note === "【メン限アーカイブ】";
-		var note = entry[hits[i]].note;
+		var is_mem = entry[hits[i]][entry_idx.note].includes("【メン限");
+		var no_note = entry[hits[i]][entry_idx.note] === "" || entry[hits[i]][entry_idx.note] === "【メン限】" || entry[hits[i]][entry_idx.note] === "【メン限アーカイブ】";
+		var note = entry[hits[i]][entry_idx.note];
 		if (is_mem) {
-			if (entry[hits[i]].note.includes("メン限アーカイブ"))　{
+			if (note.includes("メン限アーカイブ"))　{
 				note = note.replace(/【メン限アーカイブ】/g, "");
 			} else {
 				note = note.replace(/【メン限】/g, "");
 			}
 		}
-		new_html += ("<div class=\"entry_container singer_" + entry[hits[i]].type + (is_mem ? "m" : "") + " song_" + current_song + (hide_song.includes(current_song) ? " hidden" : "") + "\"><a href=\"https://youtu.be/" + video[entry[hits[i]].video].id + (entry[hits[i]].ts === 0 ? "" : ("?t=" + entry[hits[i]].time)) +"\" target=\"_blank\"><div class=\"entry_primary\"><div class=\"entry_date\">" + display_date(video[entry[hits[i]].video].date) + "</div><div class=\"entry_singer\">" + singer_lookup[entry[hits[i]].type] + "</div><div class=\"mem_display\">" + (is_mem ? "メン限" : "") + "</div></div>" + (no_note ? "" : ("<div class=\"entry_note\">" + note + "</div>")) + "</a></div>");
+		new_html += ("<div class=\"entry_container singer_" + entry[hits[i]][entry_idx.type] + (is_mem ? "m" : "") + " song_" + current_song + (hide_song.includes(current_song) ? " hidden" : "") + "\"><a href=\"https://youtu.be/" + video[entry[hits[i]][entry_idx.video]][video_idx.id] + (entry[hits[i]][entry_idx.time] === 0 ? "" : ("?t=" + entry[hits[i]].time)) +"\" target=\"_blank\"><div class=\"entry_primary\"><div class=\"entry_date\">" + display_date(video[entry[hits[i]][entry_idx.video]][video_idx.date]) + "</div><div class=\"entry_singer\">" + singer_lookup[entry[hits[i]][entry_idx.type]] + "</div><div class=\"mem_display\">" + (is_mem ? "メン限" : "") + "</div></div>" + (no_note ? "" : ("<div class=\"entry_note\">" + note + "</div>")) + "</a></div>");
 	}
 	$("#display").html(new_html + "</div>");
 	// check all hiden songs
@@ -280,6 +295,33 @@ function update_display() {
 	}
 }
 
-function is_private(index) {
-	return entry[index].note.includes("非公開") || entry[index].note.includes("記録用") || entry[index].note.includes("アーカイブなし");
+// display date in yyyy-MM-dd format
+function display_date(input) {
+	var e = new Date(input);
+	return (e.getFullYear() + "-" + fill_digit(e.getMonth() + 1, 2) + "-" + fill_digit(e.getDate(), 2));
 }
+
+// add 0 in front of a number
+function fill_digit(input, target_length) {
+	e = "" + input;
+	while (e.length < target_length) {
+		e = "0" + e;
+	}
+	return e;
+}
+
+function is_private(index) {
+	return entry[index][entry_idx.note].includes("非公開") || entry[index][entry_idx.note].includes("記録用") || entry[index][entry_idx.note].includes("アーカイブなし");
+}
+
+/*
+ * to do
+ * search bt attr mode
+ * editing request list
+ * copy to clip board
+ * copied to clipboard message pop up
+ *
+ *
+ *
+ *
+ */
