@@ -283,7 +283,7 @@ function update_display() {
 				note = note.replace(/【メン限】/g, "");
 			}
 		}
-		new_html += ("<div class=\"entry_container singer_" + entry[hits[i]][entry_idx.type] + (is_mem ? "m" : "") + " song_" + current_song + (hide_song.includes(current_song) ? " hidden" : "") + "\"><a href=\"https://youtu.be/" + video[entry[hits[i]][entry_idx.video]][video_idx.id] + (entry[hits[i]][entry_idx.time] === 0 ? "" : ("?t=" + entry[hits[i]].time)) +"\" target=\"_blank\"><div class=\"entry_primary\"><div class=\"entry_date\">" + display_date(video[entry[hits[i]][entry_idx.video]][video_idx.date]) + "</div><div class=\"entry_singer\">" + singer_lookup[entry[hits[i]][entry_idx.type]] + "</div><div class=\"mem_display\">" + (is_mem ? "メン限" : "") + "</div></div>" + (no_note ? "" : ("<div class=\"entry_note\">" + note + "</div>")) + "</a></div>");
+		new_html += ("<div class=\"entry_container singer_" + entry[hits[i]][entry_idx.type] + (is_mem ? "m" : "") + " song_" + current_song + (hide_song.includes(current_song) ? " hidden" : "") + "\"><a href=\"https://youtu.be/" + video[entry[hits[i]][entry_idx.video]][video_idx.id] + (entry[hits[i]][entry_idx.time] === 0 ? "" : ("?t=" + entry[hits[i]][entry_idx.time])) +"\" target=\"_blank\"><div class=\"entry_primary\"><div class=\"entry_date\">" + display_date(video[entry[hits[i]][entry_idx.video]][video_idx.date]) + "</div><div class=\"entry_singer\">" + singer_lookup[entry[hits[i]][entry_idx.type]] + "</div><div class=\"mem_display\">" + (is_mem ? "メン限" : "") + "</div></div>" + (no_note ? "" : ("<div class=\"entry_note\">" + note + "</div>")) + "</a></div>");
 	}
 	$("#display").html(new_html + "</div>");
 	// check all hiden songs
