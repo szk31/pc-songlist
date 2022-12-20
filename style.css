@@ -52,25 +52,17 @@ a {
 /* Links inside the navbar */
 #navbar a {
   float: left;
-  display: block;
-  color: #f2f2f2;
-  text-align: center;
-  padding: 14px 16px;
+  padding: max(0.5vw, 6px) max(1vw, 12px);
 }
 
-/* Change background on mouse-over */
-#navbar a:hover {
-  background: #ddd;
-  color: black;
+#nav_to_top {
+	content : url("icon/to_top.png");
+	width : max(4vw, 48px);
+	height : max(4vw, 48px);
 }
 
 #main_content {
 	margin-top : max(5vw, 60px);
-}
-
-/* this is as last but it does not belongs to anywhere so */
-#bottom_blank_area {
-	height : 50vh;
 }
 /* overall section ~end~ */
 
@@ -92,7 +84,7 @@ a {
 }
 
 #switch_container>#switch_method {
-	content : url("swap.png");
+	content : url("icon/swap.png");
 	width : 6vw;
 	height : 6vw;
 	margin-top : 1.5vw;
@@ -118,20 +110,20 @@ a {
 
 .sing_sel_2.selected {
 	font-weight : bold;
-	color : White;
-	background-color : #AC424A;
+	color : #FF9FAD;
+	background-color : #7F313A;
 }
 
 .sing_sel_1.selected {
 	font-weight : bold;
-	color : White;
-	background-color : #FDCCD3;
+	color : #FDCCD3;
+	background-color : #9911C9;
 }
 
 .sing_sel_0.selected {
 	font-weight : bold;
-	color : White;
-	background-color : #C2CAF3;
+	color : #C2CAF3;
+	background-color : #2947CF;
 }
 
 .singer_select:not(.selected) {
@@ -157,7 +149,7 @@ a {
 }
 
 .song_name_container.even_colour {
-	background-color : Linen;
+	background-color : PeachPuff;
 }
 
 .song_rap{
@@ -178,7 +170,7 @@ a {
 }
 
 .song_fold_icon:not(.closed) {
-	content : url("list_up.png");
+	content : url("icon/list_up.png");
 	width : 32px;
 	height : 32px;
 	align-items : center;
@@ -186,7 +178,7 @@ a {
 }
 
 .song_fold_icon.closed {
-	content : url("list_down.png");
+	content : url("icon/list_down.png");
 	width : 32px;
 	height : 32px;
 	align-items : center;
@@ -309,34 +301,34 @@ a {
 	color : #E0E7FF !important;
 }
 
-/* yuco (8) cc : 7.52 */
-.singer_8 {
+/* yuco (9) cc : 7.52 */
+.singer_9 {
 	background-color : #FFC0F9;
 	border-color : MediumBlue;
 }
-.singer_8>a {
+.singer_9>a {
 	color : MediumBlue !important;
 }
-.singer_8m {
+.singer_9m {
 	background-color : MediumBlue;
 	border-color : #FFC0F9;
 }
-.singer_8m>a {
+.singer_9m>a {
 	color : #FFC0F9 !important;
 }
-/* chui (9) cc : 4.76 */
-.singer_9 {
+/* chui (12) cc : 4.76 */
+.singer_12 {
 	background-color : Gold;
 	border-color : FireBrick;
 }
-.singer_9>a {
+.singer_12>a {
 	color : FireBrick !important;
 }
-.singer_9m {
+.singer_12m {
 	background-color : FireBrick;
 	border-color : Gold;
 }
-.singer_9m>a {
+.singer_12m>a {
 	color : Gold !important;
 }
 /* singer colour palette ~end~ */

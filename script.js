@@ -8,22 +8,45 @@ var singer_lookup = [
 	"きらにぃあ",	//    0101
 	"ももきら",	//    0110
 	"ぷちここ",	//    0111
+	"",			//    1000
 	"ゆこち",  	//    1001
-	"ちゅいたゃ"	//    1100
+	"しろ",		//    1010
+	"",			//    1011
+	"小悪熊ちゅい",	//    1100
+	"",			//    1101
+	"",			//    1110
+	"",			//    1111
 ];
 
 var display_order = [
 	-1,		// 0000
 	7, 		// 0001
 	6,		// 0010
-	4,		// 0010
+	4,		// 0011
 	5,		// 0100
 	3,		// 0101
 	2,		// 0110
 	1,		// 0111
-	9,		// 1001
-	8,		// 1100
-]
+	-1,		// 1000
+	14,		// 1001
+	13,		// 1010
+	11,		// 1011
+	12,		// 1100
+	10,		// 1101
+	9,		// 1110
+	8,		// 1111
+];
+
+var series_lookup = {
+	"マクロス" : ["マクロス", "まくろす"],
+	"ラブライブ" : ["ラブライブ", "らぶらいぶ", "LL", "ll"],
+	"物語シリーズ" : ["物語シリーズ", "ものがたりしりーず", "ものがたりシリーズ"],
+	"まどまぎ" : ["まどまぎ", "まどマギ", "まどか"],
+	"アイマス" : ["アイマス", "あいます", "デレマス", "でれます"],
+	"洋楽" : ["洋楽"],
+	"Disney" : ["Disney", "ディズニー", "でぃずにー"],
+	"ジブリ" : ["ジブリ", "じぶり"]
+}
 
 // stores whats currently looking up
 var loading = "";
@@ -47,6 +70,11 @@ $(document).ready(function() {
 });
 
 $(function() {
+	// return to top of page (anchor to top does not work as nav bar exists)
+	$(document).on("click", "#nav_to_top", function() {
+		$('html,body').scrollTop(0);
+	});
+	
 	// search
 	$(document).on("blur", "#input", function() {
 		search();
@@ -66,6 +94,7 @@ $(function() {
 		$("#input").attr("placeholder", searching_song_name ? "曲名/読みで検索" : "アーティスト名で検索");
 		$("#display").html("");
 		loading = "";
+		$("#input").focus();
 	});
 	
 	// singer selection
@@ -85,6 +114,7 @@ $(function() {
 		}
 		singer_chosen[selected] ^= 1;
 		$(".sing_sel_" + selected).toggleClass("selected");
+		loading = "";
 		search();
 	});
 	
@@ -101,7 +131,6 @@ $(function() {
 		}
 		$(".song_" + e).toggleClass("hidden");
 		$("#fold_" + e).toggleClass("closed");
-		//update_display();
 	})
 });
 
@@ -135,14 +164,32 @@ function search() {
 		return;
 	}
 	// not empty input
+	var series_name = "";
+	for (var i in series_lookup) {
+		for (var j in series_lookup[i]) {
+			if (series_lookup[i].includes(e)) {
+				series_name = i;
+				break;
+			}
+		}
+		if (series_name !== "") {
+			break;
+		}
+	}
 	var f = new Array(200);
 	var counter = 0;
-	for (var i = 0; i < song.length; ++i) {
+	for (var i = 1; i < song.length; ++i) {
 		if (searching_song_name) {
-			if (song[i].name.toLowerCase().includes(e.toLowerCase()) ||
-				song[i].reading.toLowerCase().includes(e.toLowerCase())
-			) {
-				f[counter++] = i;
+			if (series_name !== "") {
+				if (song[i].reading.includes(series_name) || song[i].attr.includes(series_name)) {
+					f[counter++] = i;
+				}
+			} else {
+				if (song[i].name.toLowerCase().includes(e.toLowerCase()) ||
+					song[i].reading.toLowerCase().includes(e.toLowerCase())
+				) {
+					f[counter++] = i;
+				}
 			}
 		} else {
 			if (song[i].credit.toLowerCase().includes(e.toLowerCase())
@@ -150,19 +197,18 @@ function search() {
 				f[counter++] = i;
 			}
 		}
-
 		if (counter === 200) {
 			break;
 		}
 	}
-	// sort f in reading order
-	f.sort(function compareFn(a, b) {
-		return song[a].id - song[b].id;
-	});
 	hit_counter = 0;
 	for (var i = 0; i < counter; ++i) {
+		// defintly improve here not to do a 2d search
 		for (var j = 0; j < entry.length; ++j) {
 			if (f[i] === entry[j].song) {
+				if (is_private(j)) {
+					continue;
+				}
 				hits[hit_counter++] = j;
 			}
 			if (hit_counter >= max_display) {
@@ -192,18 +238,7 @@ function update_display() {
 	for (var i = 0; i < hit_counter; ++i) {
 		// check if all member
 		if (sel_member !== 7) {
-			var flag = -1;
-			switch (entry[hits[i]].type) {
-				case 8 : 
-					flag = 9;
-					break;
-				case 9 : 
-					flag = 12;
-					break;
-				default :
-					flag = entry[hits[i]].type;
-			}
-			if (!(sel_member & flag)) {
+			if (!(sel_member & entry[hits[i]].type)) {
 				continue;
 			}
 		}
@@ -223,10 +258,6 @@ function update_display() {
 				"<div id=\"fold_" + current_song + "\" class=\"song_fold_icon" + (show ? "" : " closed") + "\"></div>" +
 			"</div>");
 		}
-		// skip all records if hidden
-		if (hide_song.includes(current_song)) {
-			continue;
-		}
 		var is_mem = entry[hits[i]].note.includes("【メン限");
 		var no_note = entry[hits[i]].note === "" || entry[hits[i]].note === "【メン限】" || entry[hits[i]].note === "【メン限アーカイブ】";
 		var note = entry[hits[i]].note;
@@ -237,9 +268,9 @@ function update_display() {
 				note = note.replace(/【メン限】/g, "");
 			}
 		}
-		new_html += ("<div class=\"entry_container singer_" + entry[hits[i]].type + (is_mem ? "m" : "") + " song_" + current_song + "\"><a href=\"https://youtu.be/" + video[entry[hits[i]].video].id + (entry[hits[i]].ts === 0 ? "" : ("?t=" + entry[hits[i]].time)) +"\" target=\"_blank\"><div class=\"entry_primary\"><div class=\"entry_date\">" + display_date(video[entry[hits[i]].video].date) + "</div><div class=\"entry_singer\">" + singer_lookup[entry[hits[i]].type] + "</div><div class=\"mem_display\">" + (is_mem ? "メン限" : "") + "</div></div>" + (no_note ? "" : ("<div class=\"entry_note\">" + note + "</div>")) + "</a></div>");
+		new_html += ("<div class=\"entry_container singer_" + entry[hits[i]].type + (is_mem ? "m" : "") + " song_" + current_song + (hide_song.includes(current_song) ? " hidden" : "") + "\"><a href=\"https://youtu.be/" + video[entry[hits[i]].video].id + (entry[hits[i]].ts === 0 ? "" : ("?t=" + entry[hits[i]].time)) +"\" target=\"_blank\"><div class=\"entry_primary\"><div class=\"entry_date\">" + display_date(video[entry[hits[i]].video].date) + "</div><div class=\"entry_singer\">" + singer_lookup[entry[hits[i]].type] + "</div><div class=\"mem_display\">" + (is_mem ? "メン限" : "") + "</div></div>" + (no_note ? "" : ("<div class=\"entry_note\">" + note + "</div>")) + "</a></div>");
 	}
-	$("#display").html(new_html + "</div><div id=\"bottom_blank_area\"></div>");
+	$("#display").html(new_html + "</div>");
 	// check all hiden songs
 	for (var i = 0; i < hide_song.length; ++i) {
 		// if song havnt been laoded, remove from hide list
@@ -247,4 +278,8 @@ function update_display() {
 			hide_song.splice(i--, 1);
 		}
 	}
+}
+
+function is_private(index) {
+	return entry[index].note.includes("非公開") || entry[index].note.includes("記録用") || entry[index].note.includes("アーカイブなし");
 }
