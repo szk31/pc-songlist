@@ -178,13 +178,14 @@ $(function() {
 		fetch("https://noembed.com/embed?dataType=json&url=" + url)
 			.then(res => res.json())
 			.then(function(data) {
-				// title of unlisted / private video are returned as undefined
-				if (data.title === undefined) {
+				// title of unlisted / private video are returned a 401 error
+				if (data.error.startsWith("401")) {
 					alert("再アップの動画を共有しないで下さい。");
 					return;
+				} else {
+					var tweet = song[entry[entry_id][entry_idx.song_id]][song_idx.name] + " / " + song[entry[entry_id][entry_idx.song_id]][song_idx.artist] + " @ " + data.title + "\n(youtu.be/" + video[entry[entry_id][entry_idx.video]][video_idx.id] + "?t=" + entry[entry_id][entry_idx.time] + ") via [site on work]";
+					window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweet), "_blank");						
 				}
-				var tweet = song[entry[entry_id][entry_idx.song_id]][song_idx.name] + " / " + song[entry[entry_id][entry_idx.song_id]][song_idx.artist] + " @ " + data.title + "\n(youtu.be/" + video[entry[entry_id][entry_idx.video]][video_idx.id] + "?t=" + entry[entry_id][entry_idx.time] + ") via [site on work]";
-				window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweet), "_blank");
 		  });
 
 	})
