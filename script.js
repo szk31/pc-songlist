@@ -78,21 +78,29 @@ var singer_chosen = [1, 1, 1];
 var hide_song = new Array();
 
 // max display song count
-const max_display = 120;
+var max_display = 400;
 
 // if searching through song names or artist names
 var searching_song_name = true;
 
+// ram for searching (entry_processed)
+//var entry_proc = new Array(song.length).fill([]);
+
 $(document).ready(function() {
-	if ($("#input").val() !== "") {
-		search();
-	}
+	$("#input").val("");
+	/*
+	for (var i = 0; i < entry.length; ++i) {
+		entry_proc[entry[i][0]].push(i);
+		console.log("pushing " + i + " into entry_proc[" + entry[i][0] + "]", entry_proc[entry[i][0]].length);
+	}*/
 });
 
 $(function() {
 	// return to top of page (anchor to top does not work as nav bar exists)
 	$(document).on("click", "#nav_to_top", function() {
-		$('html,body').animate({ scrollTop: 0 }, "fast");
+		$("html,body").animate({
+			scrollTop: 0
+		}, "fast");
 	});
 	
 	// search
@@ -160,6 +168,21 @@ $(function() {
 		var e = parseInt($(this).attr("id").replace("copy_name_", ""));
 		navigator.clipboard.writeText(song[e][song_idx.name]);
 	});
+	
+	// share
+	$(document).on("click", ".entry_share", function() {
+		var entry_id = parseInt($(this).attr("id").replace("entry_", ""));
+		// get video title
+		const url = "https://www.youtube.com/watch?v=" + video[entry[entry_id][entry_idx.video]][video_idx.id];
+
+		fetch("https://noembed.com/embed?dataType=json&url=" + url)
+			.then(res => res.json())
+			.then(function(data) {
+				var tweet = song[entry[entry_id][entry_idx.song_id]][song_idx.name] + " / " + song[entry[entry_id][entry_idx.song_id]][song_idx.artist] + " @ " + data.title + "\n(youtu.be/" + video[entry[entry_id][entry_idx.video]][video_idx.id] + "?t=" + entry[entry_id][entry_idx.time] + ") via [site on work]";
+				window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweet), "_blank");
+		  });
+
+	})
 });
 
 var hits = new Array(max_display);
@@ -189,6 +212,8 @@ function search() {
 			break;
 		}
 	}
+	// replace wchar w/ char
+	e = e.normalize("NFKC");
 	var f = new Array(200);
 	var counter = 0;
 	for (var i = 1; i < song.length; ++i) {
@@ -198,7 +223,7 @@ function search() {
 					f[counter++] = i;
 				}
 			} else {
-				if (song[i][song_idx.name].toLowerCase().includes(e.toLowerCase()) ||
+				if (song[i][song_idx.name].normalize("NFKC").toLowerCase().includes(e.toLowerCase()) ||
 					song[i][song_idx.reading].toLowerCase().includes(e.toLowerCase())
 				) {
 					f[counter++] = i;
@@ -215,7 +240,6 @@ function search() {
 	}
 	hit_counter = 0;
 	for (var i = 0; i < counter; ++i) {
-		// defintly improve here not to do a 2d search
 		for (var j = 0; j < entry.length; ++j) {
 			if (f[i] === entry[j][entry_idx.song_id]) {
 				if (is_private(j)) {
@@ -261,10 +285,23 @@ function update_display() {
 			loaded_song[loaded_count++] = current_song;
 			// if hide the song
 			var show = !hide_song.includes(current_song);
+			// check song name
+			var song_name = song[current_song][song_idx.name].normalize("NFKC");
+			var song_name_length = 0;
+			for (var j = 0; j < song_name.length; ++j) {
+				song_name_length += /[ -~]/.test(song_name.charAt(j)) ? 1 : 2;
+			}
+			// you know what fuck this shit i will just add exception
+			if (song_name === "secret base ~君がくれたもの~") {
+				song_name_length = 0;
+			}
+			if (/([^~]+~+[^~])/g.test(song_name) && song_name_length >= 28) {
+				song_name = song_name.substring(0, song_name.search(/~/g)) + "<br />" + song_name.substring(song_name.search(/~/g));
+			}
 			new_html += (
 			"<div class=\"song_name_container " + (loaded_count % 2 === 0 ? "odd_colour" : "even_colour") + "\" id=\"" + current_song + "\">" +
 				"<div class=\"song_rap\">" +
-					"<div class=\"song_name\">" + song[current_song][song_idx.name] + "</div>" +
+					"<div class=\"song_name\">" + song_name + "</div>" +
 					(show ? ("<div class=\"song_credit" + (song[current_song][song_idx.artist].length > 30 ? " long_credit" : "") + " song_" + current_song + "\">" + song[current_song][song_idx.artist] + "</div>") : "") +
 				"</div>" +
 				"<div class=\"song_icon_container\">" +
@@ -283,7 +320,7 @@ function update_display() {
 				note = note.replace(/【メン限】/g, "");
 			}
 		}
-		new_html += ("<div class=\"entry_container singer_" + entry[hits[i]][entry_idx.type] + (is_mem ? "m" : "") + " song_" + current_song + (hide_song.includes(current_song) ? " hidden" : "") + "\"><a href=\"https://youtu.be/" + video[entry[hits[i]][entry_idx.video]][video_idx.id] + (entry[hits[i]][entry_idx.time] === 0 ? "" : ("?t=" + entry[hits[i]][entry_idx.time])) +"\" target=\"_blank\"><div class=\"entry_primary\"><div class=\"entry_date\">" + display_date(video[entry[hits[i]][entry_idx.video]][video_idx.date]) + "</div><div class=\"entry_singer\">" + singer_lookup[entry[hits[i]][entry_idx.type]] + "</div><div class=\"mem_display\">" + (is_mem ? "メン限" : "") + "</div></div>" + (no_note ? "" : ("<div class=\"entry_note\">" + note + "</div>")) + "</a></div>");
+		new_html += ("<div class=\"entry_container singer_" + entry[hits[i]][entry_idx.type] + (is_mem ? "m" : "") + " song_" + current_song + (hide_song.includes(current_song) ? " hidden" : "") + "\"><a href=\"https://youtu.be/" + video[entry[hits[i]][entry_idx.video]][video_idx.id] + (entry[hits[i]][entry_idx.time] === 0 ? "" : ("?t=" + entry[hits[i]][entry_idx.time])) +"\" target=\"_blank\"><div class=\"entry_primary\"><div class=\"entry_date\">" + display_date(video[entry[hits[i]][entry_idx.video]][video_idx.date]) + "</div><div class=\"entry_singer\">" + singer_lookup[entry[hits[i]][entry_idx.type]] + "</div><div class=\"mem_display\">" + (is_mem ? "メン限" : "") + "</div><div class=\"entry_share\" id=\"entry_" + hits[i] + "\" onclick=\"return false;\"></div></div>" + (no_note ? "" : ("<div class=\"entry_note\">" + note + "</div>")) + "</a></div>");
 	}
 	$("#display").html(new_html + "</div>");
 	// check all hiden songs
@@ -321,7 +358,7 @@ function is_private(index) {
  * copy to clip board
  * copied to clipboard message pop up
  *
- *
+ * add a \n before ~*~ if string length exist sth
  *
  *
  */

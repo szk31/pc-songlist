@@ -206,8 +206,8 @@ a {
 	font-size : 3.6vw;
 	padding : 1vw;
 	margin : 1.5vw 3.2vw;
-	border: none;
-	border-radius: 0.8vw;
+	border : none;
+	border-radius : 0.8vw;
 }
 
 .entry_primary {
@@ -215,18 +215,25 @@ a {
 }
 
 .entry_date {
-	flex-grow: 1;
+	flex-grow : 1;
 	width : 34vw;
 	margin : 0vw 2vw;
 }
 
 .entry_singer {
-	flex-grow: 1;
-	width : 38vw;
+	flex-grow : 1;
+	width : 34vw;
 }
 
 .mem_display {
-	width : 18vw;
+	flex-grow : 1;
+	width : 14vw;
+}
+
+.entry_share {
+	content : url("icon/share.png");
+	width : 6vw;
+	height : 6vw;
 }
 
 .entry_note {
