@@ -42,22 +42,61 @@ a {
 }
 /* The navigation bar */
 #navbar {
-  overflow: hidden;
-  background-color: #333;
-  position: fixed; /* Set the navbar to fixed position */
-  top: 0; /* Position the navbar at the top of the page */
-  width: 100%; /* Full width */
-  height : max(10vw, 80px);
-  z-index : 2;
+	display : grid;
+	overflow: hidden;
+	background-color: #333;
+	position: fixed; /* Set the navbar to fixed position */
+	top: 0; /* Position the navbar at the top of the page */
+	width: 100%; /* Full width */
+	height : max(10vw, 80px);
+	z-index : 2;
 }
 
-/* Links inside the navbar */
-#navbar a {
-  float: left;
-  padding: max(1vw, 8px) max(2vw, 16px);
+#nav_menu_group {
+	grid-column : 1;
+	grid-row : 1;
+	width : 33.33vw;
+}
+
+#nav_menu {
+	padding: max(1vw, 8px) max(1vw, 8px) max(1vw, 8px) max(2vw, 16px);
+	content : url("icon/menu.png");
+	width : max(8vw, 64px);
+	height : max(8vw, 64px);
+}
+
+#nav_setting {
+	padding: max(1vw, 8px) max(2vw, 16px) max(1vw, 8px) max(1vw, 8px);
+	content : url("icon/setting.png");
+	width : max(8vw, 64px);
+	height : max(8vw, 64px);
+}
+
+#nav_title {
+	grid-column : 2;
+	grid-row : 1;
+	width : 33.33vw;
+	color : #DFDFFF;
+	text-align : center;
+	font-size : 7vw;
+}
+
+#nav_control_group {
+	grid-column : 3;
+	grid-row : 1;
+	width : 33.33vw;
+	text-align : right;
+}
+
+#nav_info {
+	padding: max(1vw, 8px) max(1vw, 8px) max(1vw, 8px) max(2vw, 16px);
+	content : url("icon/info.png");
+	width : max(8vw, 64px);
+	height : max(8vw, 64px);
 }
 
 #nav_to_top {
+	padding: max(1vw, 8px) max(2vw, 16px) max(1vw, 8px) max(1vw, 8px);
 	content : url("icon/to_top.png");
 	width : max(8vw, 64px);
 	height : max(8vw, 64px);

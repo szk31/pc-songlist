@@ -2,7 +2,7 @@
 	<head>
         <meta charset="UTF-8">
 		<title>ぷちここ歌まとめ</title>
-		<link rel="icon" type="image/png" href="icon/icon.png">
+		<link rel="icon" type="image/gif" href="icon/icon.gif">
 		<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
 		<script type="text/javascript" src="entry.js"></script>
 		<script type="text/javascript" src="song.js"></script>
@@ -12,7 +12,15 @@
 	</head>
     <body oncontextmenu="return false;">
 		<div id="navbar">
-			<a href="#" id="nav_to_top"></a>
+			<div id="nav_menu_group">
+				<a href="#" id="nav_menu" class="hidden"></a>
+				<a href="#" id="nav_setting" class="hidden"></a>
+			</div>
+			<div id="nav_title">曲検索</div>
+			<div id="nav_control_group">
+				<a href="#" id="nav_info" class="hidden"></a>
+				<a href="#" id="nav_to_top"></a>
+			</div>
 		</div>
 		<div id="search_section">
 			<div id="input_container">
@@ -24,8 +32,7 @@
 			<div class="singer_container">
 				<span class="singer_select selected sing_sel_2">逢魔きらら</span><span class="singer_select selected sing_sel_1">胡桃澤もも</span><span class="singer_select selected sing_sel_0">看谷にぃあ</span>
 			</div>
-			<span id="display">
-			</span>
+			<span id="search_display"></span>
 		</div>
 		<div id="repertoire_section hidden"></div>
     </body>

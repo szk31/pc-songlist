@@ -120,7 +120,7 @@ $(function() {
 		$("#input").val("");
 		searching_song_name ^= 1;
 		$("#input").attr("placeholder", searching_song_name ? "曲名/読みで検索" : "アーティスト名で検索");
-		$("#display").html("");
+		$("#search_display").html("");
 		loading = "";
 		$("#input").focus();
 	});
@@ -183,7 +183,7 @@ $(function() {
 					alert("再アップの動画を共有しないで下さい。");
 					return;
 				} else {
-					var tweet = song[entry[entry_id][entry_idx.song_id]][song_idx.name] + " / " + song[entry[entry_id][entry_idx.song_id]][song_idx.artist] + " @ " + data.title + "\n(youtu.be/" + video[entry[entry_id][entry_idx.video]][video_idx.id] + "?t=" + entry[entry_id][entry_idx.time] + ") via [site on work]";
+					var tweet = song[entry[entry_id][entry_idx.song_id]][song_idx.name] + " / " + song[entry[entry_id][entry_idx.song_id]][song_idx.artist] + " @" + data.title + "\n(youtu.be/" + video[entry[entry_id][entry_idx.video]][video_idx.id] + "?t=" + entry[entry_id][entry_idx.time] + ") via [site on work]";
 					window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweet), "_blank");						
 				}
 		  });
@@ -202,7 +202,7 @@ function search() {
 	loading = e;
 	if (e === "") {
 		// clear current list
-		$("#display").html("");
+		$("#search_display").html("");
 		return;
 	}
 	// not empty input
@@ -265,7 +265,7 @@ function search() {
 }
 
 function update_display() {
-	$("#display").html("");
+	$("#search_display").html("");
 	var current_song = -1;
 	var sel_member = 7;
 	for (var i in singer_chosen) {
@@ -328,10 +328,10 @@ function update_display() {
 		}
 		new_html += ("<div class=\"entry_container singer_" + entry[hits[i]][entry_idx.type] + (is_mem ? "m" : "") + " song_" + current_song + (hide_song.includes(current_song) ? " hidden" : "") + "\"><a href=\"https://youtu.be/" + video[entry[hits[i]][entry_idx.video]][video_idx.id] + (entry[hits[i]][entry_idx.time] === 0 ? "" : ("?t=" + entry[hits[i]][entry_idx.time])) +"\" target=\"_blank\"><div class=\"entry_primary\"><div class=\"entry_date\">" + display_date(video[entry[hits[i]][entry_idx.video]][video_idx.date]) + "</div><div class=\"entry_singer\">" + singer_lookup[entry[hits[i]][entry_idx.type]] + "</div><div class=\"mem_display\">" + (is_mem ? "メン限" : "") + "</div><div class=\"entry_share\" id=\"entry_" + hits[i] + "\" onclick=\"return false;\"></div></div>" + (no_note ? "" : ("<div class=\"entry_note\">" + note + "</div>")) + "</a></div>");
 	}
-	$("#display").html(new_html + "</div>");
+	$("#search_display").html(new_html + "</div>");
 	// check all hiden songs
 	for (var i = 0; i < hide_song.length; ++i) {
-		// if song havnt been laoded, remove from hide list
+		// if song havnt been loaded, remove from hide list
 		if (!loaded_song.includes(hide_song[i])) {
 			hide_song.splice(i--, 1);
 		}
@@ -364,7 +364,6 @@ function is_private(index) {
  * copy to clip board
  * copied to clipboard message pop up
  *
- * add a \n before ~*~ if string length exist sth
  *
  *
  */
