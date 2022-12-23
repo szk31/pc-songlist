@@ -179,7 +179,7 @@ $(function() {
 			.then(res => res.json())
 			.then(function(data) {
 				// title of unlisted / private video are returned a 401 error
-				if (data.error.startsWith("401")) {
+				if (data.error.startsWith("401") || data.title === undefined) {
 					alert("再アップの動画を共有しないで下さい。");
 					return;
 				} else {
