@@ -68,7 +68,7 @@ var video_idx = {
 	date : 1
 };
 
-var build_version = "2022-12-26-1";
+var build_version = "2022-12-26-2";
 
 /* control / memories */
 // stores whats currently looking up
@@ -279,7 +279,7 @@ $(function() {
 			.then(function(data) {
 				// title of unlisted / private video are returned a 401 error
 				if (data.title === undefined) {
-					alert("再アップの動画を共有しないで下さい。");
+					alert("再アップ/非公開の動画を共有しないで下さい。");
 				} else {
 					var tweet = song[entry[entry_id][entry_idx.song_id]][song_idx.name].trim() + " / " + song[entry[entry_id][entry_idx.song_id]][song_idx.artist] + " @" + data.title + "\n(youtu.be/" + video[entry[entry_id][entry_idx.video]][video_idx.id] + "?t=" + entry[entry_id][entry_idx.time] + ") via [site on work]";
 					window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweet), "_blank");						
