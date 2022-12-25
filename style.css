@@ -58,9 +58,16 @@ a {
 	width : 33.33vw;
 }
 
-#nav_menu {
+#nav_menu:not(.menu_opened) {
 	padding: max(1vw, 8px) max(1vw, 8px) max(1vw, 8px) max(2vw, 16px);
 	content : url("icon/menu.png");
+	width : max(8vw, 64px);
+	height : max(8vw, 64px);
+}
+
+#nav_menu.menu_opened {
+	padding: max(1vw, 8px) max(1vw, 8px) max(1vw, 8px) max(2vw, 16px);
+	content : url("icon/cross.png");
 	width : max(8vw, 64px);
 	height : max(8vw, 64px);
 }
@@ -88,13 +95,6 @@ a {
 	text-align : right;
 }
 
-#nav_info {
-	padding: max(1vw, 8px) max(1vw, 8px) max(1vw, 8px) max(2vw, 16px);
-	content : url("icon/info.png");
-	width : max(8vw, 64px);
-	height : max(8vw, 64px);
-}
-
 #nav_to_top {
 	padding: max(1vw, 8px) max(2vw, 16px) max(1vw, 8px) max(1vw, 8px);
 	content : url("icon/to_top.png");
@@ -106,6 +106,81 @@ a {
 	margin-top : max(10vw, 80px);
 }
 /* overall section ~end~ */
+
+/* menu section */
+#menu_container {
+	position : absolute;
+	left : 0;
+	top : max(10vw, 80px);
+	height : 100%;
+	width : 100%;
+	background : rgba(30, 30, 30, 0.5);
+}
+
+#menu_pannel {
+	left : 0;
+	height : 100%;
+	width : 75vw;
+	background-color : DimGrey;
+	font-size : 5vw;
+	color : GhostWhite;
+}
+
+#menu2page_title {
+	position : relative;
+	top : 2vw;
+	left : 2vw;
+}
+
+#menu2page_container {
+	position : relative;
+	top : 2vw;
+}
+
+.menu2page {
+	margin : 1vw 4vw;
+	padding : 1vw;
+}
+
+.menu2page.menu2page_selected {
+	background-color : Grey;
+}
+
+#menu_line {
+	position : relative;
+	top : 1vw;
+	margin : 4vw 2vw;
+	border-top : 1vw solid Gainsboro;
+}
+
+#menu_bottom {
+	position : absolute;
+	bottom : 10vw;
+	height : 36vw;
+	width : 75vw;
+}
+
+#menu_info, #menu_setting {
+	display : flex;
+	margin : 2vw;
+	align-items : center;
+}
+
+#menu_info_icon {
+	position : relative;
+	padding: 1vw;
+	content : url("icon/info.png");
+	width : 8vw;
+	height : 8vw;
+}
+
+#menu_setting_icon {
+	position : relative;
+	padding: 1vw;
+	content : url("icon/setting.png");
+	width : 8vw;
+	height : 8vw;
+}
 
 /* inputs ~start~ */
 #input_container {
@@ -393,6 +468,139 @@ a {
 }
 /* singer colour palette ~end~ */
 
+/* info section */
+#information {
+	top : 0;
+	position : absolute;
+	width : 100%;
+	height : 100%;
+	background-color : rgba(31, 31, 31, 0.5);
+}
+
+#info_defog {
+	position : absolute;
+	left : 50%;
+	top : 50%;
+	transform: translate(-50%, -50%);
+	width : 70vw;
+	height : 80vw;
+	background-color : MediumPurple;
+	color : Snow;
+	font-size : 4vw;
+	text-align : center;
+	border: none;
+	border-radius: 2vw;
+}
+
+#info_defog>div {
+	margin : 24vw 0vw;
+}
+
+#info_defog>div>a {
+	color : White;
+	background-color : #1DA1F2;
+	border: none;
+	border-radius: 2vw;
+	padding : 0.5vw 2vw;
+	font-weight : bold;
+}
+
+/* setting section */
+#setting {
+	top : 0;
+	position : absolute;
+	width : 100%;
+	height : 100%;
+	background-color : rgba(31, 31, 31, 0.5);
+}
+
+#setting_defog {
+	position : absolute;
+	left : 50%;
+	top : 50%;
+	transform: translate(-50%, -50%);
+	width : 70vw;
+	height : 100vw;
+	background-color : MediumPurple;
+	color : Snow;
+	font-size : 4vw;
+	text-align : center;
+	border: none;
+	border-radius: 2vw;
+}
+
+#setting_display-private {
+	justify-content: center;
+}
+
+#setting_button_container {
+	margin-top : 66vw;
+}
+
+#setting_default, #setting_confirm {
+	color : White;
+	background-color : Indigo;
+	border: 0.5vw solid White;
+	border-radius: 2vw;
+	padding : 0.5vw 2vw;
+	font-weight : bold;
+}
+
+/* slider switch from w3 school */
+.toggle_switch {
+  position: relative;
+  display: inline-block;
+  width: 12vw;
+  height: 6.8vw;
+  top : -4.5vw;
+  left : 2vw;
+}
+
+.toggle_switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .2s;
+  transition: .2s;
+  border-radius: 6.8vw;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 5.2vw;
+  width: 5.2vw;
+  left: 0.8vw;
+  bottom: 0.8vw;
+  background-color: white;
+  -webkit-transition: .2s;
+  transition: .2s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(5.2vw);
+  -ms-transform: translateX(5.2vw);
+  transform: translateX(5.2vw);
+}
 
 /*
  *  to do

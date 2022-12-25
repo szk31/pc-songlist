@@ -68,6 +68,9 @@ var video_idx = {
 	date : 1
 };
 
+var build_version = "2022-12-26-1";
+
+/* control / memories */
 // stores whats currently looking up
 var loading = "";
 
@@ -77,11 +80,25 @@ var singer_chosen = [1, 1, 1];
 // store song id (song[id]) of folded up songs
 var hide_song = new Array();
 
-// max display song count
-var max_display = 400;
-
 // if searching through song names or artist names
 var searching_song_name = true;
+
+// current page id
+var current_page = 0;
+
+/*  page IDs
+ *
+ *  0 : search
+ *  1 : repertoire
+ */
+
+/* setting section */
+// max display song count
+var max_display = 100;
+
+// if on, display private entries despite not accessable
+var do_display_hidden = false;
+
 
 // ram for searching (entry_processed)
 //var entry_proc = new Array(song.length).fill([]);
@@ -93,9 +110,91 @@ $(document).ready(function() {
 		entry_proc[entry[i][0]].push(i);
 		console.log("pushing " + i + " into entry_proc[" + entry[i][0] + "]", entry_proc[entry[i][0]].length);
 	}*/
+	$("#info_version").html(build_version);
+	$("#info_last-update").html(video[video.length - 1][video_idx.date]);
 });
 
 $(function() {
+	// calling menu
+	$(document).on("click", "#nav_menu", function() {
+		$("#menu_container").toggleClass("hidden");
+		$("#nav_menu").toggleClass("menu_opened");
+	});
+	
+	// click on fog to close menu
+	$(document).on("click", "#menu_container", function(e) {
+		if (!($(e.target).parents(".defog").length || $(e.target).hasClass("defog"))) {
+			$("#menu_container").addClass("hidden");
+			$("#nav_menu").removeClass("menu_opened");
+		}
+	});
+	
+	// menu to page
+	$(document).on("click", ".menu2page", function(e) {
+		var target = ($(e.target).attr("id")).replace("menu2page_", "");
+		var target_id = -1;
+		switch (target) {
+			case "search" :
+				target_id = 0;
+				break;
+			case "repertoire" :
+				target_id = 1;
+				break;
+		}
+		if (target_id !== current_page) {
+			current_page = target_id;
+			$(".menu2page_selected").removeClass("menu2page_selected");
+			$("#" + $(e.target).attr("id")).addClass("menu2page_selected");
+			// nothing implemented here
+			$("#menu_container").addClass("hidden");
+			$("#nav_menu").removeClass("menu_opened");
+		}
+	});
+	
+	// menu information
+	$(document).on("click", "#menu_info", function() {
+		$("#information").removeClass("hidden");
+		$("#menu_container").addClass("hidden");
+		$("#nav_menu").removeClass("menu_opened");
+	});
+	
+	// menu settings
+	$(document).on("click", "#menu_setting", function() {
+		$("#setting").removeClass("hidden");
+		$("#menu_container").addClass("hidden");
+		$("#nav_menu").removeClass("menu_opened");
+	});
+	
+	// return from info
+	$(document).on("click", "#information", function(e) {
+		if (!($(e.target).parents(".defog").length ||  $(e.target).hasClass("defog"))) {
+			$("#information").addClass("hidden");
+		}
+	});
+	
+	// do diplay hidden switch update
+	$(document).on("change", ".toggle_switch", function(e) {
+		do_display_hidden = e.target.checked;
+	});
+	
+	// settings reset to default
+	$(document).on("click", "#setting_default", function() {
+		// revert value
+		max_display = 100;
+		do_display_hidden = false;
+		
+		// update display
+		$("#setting_max-display_value").html(max_display);
+		$("#setting_display-private_checkbox").prop("checked", do_display_hidden);
+	});
+	
+	// settings confirm
+	$(document).on("click", "#setting_confirm", function() {
+		$("#setting").addClass("hidden");
+		loading = "";
+		search();
+	});
+	
 	// return to top of page (anchor to top does not work as nav bar exists)
 	$(document).on("click", "#nav_to_top", function() {
 		$("html,body").animate({
@@ -179,11 +278,10 @@ $(function() {
 			.then(res => res.json())
 			.then(function(data) {
 				// title of unlisted / private video are returned a 401 error
-				if (data.error.startsWith("401") || data.title === undefined) {
+				if (data.title === undefined) {
 					alert("再アップの動画を共有しないで下さい。");
-					return;
 				} else {
-					var tweet = song[entry[entry_id][entry_idx.song_id]][song_idx.name] + " / " + song[entry[entry_id][entry_idx.song_id]][song_idx.artist] + " @" + data.title + "\n(youtu.be/" + video[entry[entry_id][entry_idx.video]][video_idx.id] + "?t=" + entry[entry_id][entry_idx.time] + ") via [site on work]";
+					var tweet = song[entry[entry_id][entry_idx.song_id]][song_idx.name].trim() + " / " + song[entry[entry_id][entry_idx.song_id]][song_idx.artist] + " @" + data.title + "\n(youtu.be/" + video[entry[entry_id][entry_idx.video]][video_idx.id] + "?t=" + entry[entry_id][entry_idx.time] + ") via [site on work]";
 					window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweet), "_blank");						
 				}
 		  });
@@ -248,7 +346,7 @@ function search() {
 	for (var i = 0; i < counter; ++i) {
 		for (var j = 0; j < entry.length; ++j) {
 			if (f[i] === entry[j][entry_idx.song_id]) {
-				if (is_private(j)) {
+				if ((!do_display_hidden) && is_private(j)) {
 					continue;
 				}
 				hits[hit_counter++] = j;
