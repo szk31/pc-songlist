@@ -68,7 +68,7 @@ var video_idx = {
 	date : 1
 };
 
-var build_version = "2022-12-27-1";
+var build_version = "2022-12-27-2";
 
 /* control / memories */
 // stores whats currently looking up
@@ -85,6 +85,9 @@ var searching_song_name = true;
 
 // current page id
 var current_page = 0;
+
+// prevent menu from opening when info or setting is up
+var prevent_menu_popup = false;
 
 /*  page IDs
  *
@@ -124,6 +127,9 @@ $(function() {
 	$(document).on("click", "#nav_menu", function(e) {
 		// disable going back to top
 		e.preventDefault();
+		if (prevent_menu_popup) {
+			return;
+		}
 		$("#menu_container").toggleClass("hidden");
 		$("#nav_menu").toggleClass("menu_opened");
 		$(document.body).toggleClass("no_scroll");
@@ -134,6 +140,7 @@ $(function() {
 		if (!($(e.target).parents(".defog").length || $(e.target).hasClass("defog"))) {
 			$("#menu_container").addClass("hidden");
 			$("#nav_menu").removeClass("menu_opened");
+			$(document.body).removeClass("no_scroll");
 		}
 	});
 	
@@ -166,6 +173,7 @@ $(function() {
 		$("#information").removeClass("hidden");
 		$("#menu_container").addClass("hidden");
 		$("#nav_menu").removeClass("menu_opened");
+		prevent_menu_popup = true;
 	});
 	
 	// menu settings
@@ -174,6 +182,7 @@ $(function() {
 		$("#setting").removeClass("hidden");
 		$("#menu_container").addClass("hidden");
 		$("#nav_menu").removeClass("menu_opened");
+		prevent_menu_popup = true;
 	});
 	
 	// return from info
@@ -182,6 +191,7 @@ $(function() {
 			$("#information").addClass("hidden");
 			$("#popup_container").addClass("hidden");
 			$(document.body).removeClass("no_scroll");
+			prevent_menu_popup = false;
 		}
 	});
 	
@@ -226,6 +236,7 @@ $(function() {
 		$("#setting").addClass("hidden");
 		$("#popup_container").addClass("hidden");
 		$(document.body).removeClass("no_scroll");
+		prevent_menu_popup = false;
 		if (use_singer_icon) {
 			$(".singer_container").addClass("hidden");
 			$(".singer_icon_container").removeClass("hidden");
@@ -238,7 +249,11 @@ $(function() {
 	});
 	
 	// return to top of page (anchor to top does not work as nav bar exists)
-	$(document).on("click", "#nav_to_top", function() {
+	$(document).on("click", "#nav_to_top", function(e) {
+		e.preventDefault();
+		if (prevent_menu_popup) {
+			return;
+		}
 		$("html,body").animate({
 			scrollTop: 0
 		}, "fast");
