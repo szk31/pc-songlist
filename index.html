@@ -8,7 +8,9 @@
 		<script type="text/javascript" src="song.js"></script>
 		<script type="text/javascript" src="video.js"></script>
 		<script type="text/javascript" src="script.js"></script>
-		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="style_general.css">
+		<link rel="stylesheet" href="style_search.css">
+		<link rel="stylesheet" href="style_repertoire.css">
 	</head>
     <body oncontextmenu="return false;">
 		<div id="navbar">
@@ -28,12 +30,23 @@
 					<a href="#" id="switch_method"></a>
 				</div>
 			</div>
-			<div class="singer_container">
+			<div class="singer_container hidden">
 				<span class="singer_select selected sing_sel_2">逢魔きらら</span><span class="singer_select selected sing_sel_1">胡桃澤もも</span><span class="singer_select selected sing_sel_0">看谷にぃあ</span>
+			</div>
+			<div class="singer_icon_container">
+				<div class="singer_icon_bg selected sing_sel_2">
+					<span id="icon_kirara" class="singer_icon selected sing_sel_2"></span>
+				</div>
+				<div class="singer_icon_bg selected sing_sel_1">
+					<span id="icon_momo" class="singer_icon selected sing_sel_1"></span>
+				</div>
+				<div class="singer_icon_bg selected sing_sel_0">
+					<span id="icon_nia" class="singer_icon selected sing_sel_0"></span>
+				</div>
 			</div>
 			<span id="search_display"></span>
 		</div>
-		<div id="repertoire_section hidden"></div>
+		<div id="repertoire_section" class="hidden"></div>
 		<div id="menu_container" class="hidden">
 			<div id="menu_pannel" class="defog">
 				<span id="menu2page_title">ページ選択</span>
@@ -48,35 +61,50 @@
 				</div>
 			</div>
 		</div>
-		<div id="information" class="hidden">
-			<div id="info_defog">
-				<h3>詳細情報</h3>
-				version : <span id="info_version"></span><br />
-				last update : <span id="info_last-update"></span><br />
-				<div>
-					Creator : shizuku3158<br />
-					<a href="https://www.twitter.com/8513ukuzihs" id="info_twitter" target="_blank">twitter</a>
+		<div id="popup_container" class="hidden">
+			<div id="information" class="hidden">
+				<div id="info_defog">
+					<h3>詳細情報</h3>
+					version : <span id="info_version"></span><br />
+					last update : <span id="info_last-update"></span><br />
+					<div>
+						Creator : shizuku3158<br />
+						<a href="https://www.twitter.com/8513ukuzihs" id="info_twitter" target="_blank">twitter</a>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div id="setting" class="hidden">
-			<div id="setting_defog">
-				<h3>設定</h3>
-				<div id="setting_max-display" class="hidden">
-					最大表示数：<span id="setting_max-display_value">100</span>
-				</div>
-				<div id="setting_display-private">
-					非公開動画の表示:<label class="toggle_switch">
-						<input type="checkbox" id="setting_display-private_checkbox">
-						<span id="setting_display-private_switch" class="slider"></span>
-					</label>
-				</div>
-				<div id="setting_button_container">
-					<a href="#" id="setting_default">リセット</a>
-					<a href="#" id="setting_confirm"> 確定 </a>
+			<div id="setting" class="hidden">
+				<div id="setting_defog">
+					<h3>設定</h3>
+					<div id="setting_max-display" class="hidden">
+						最大表示数：<span id="setting_max-display_value">100</span>
+					</div>
+					<div id="setting_display-private">
+						非公開動画の表示：<label class="toggle_switch">
+							<input type="checkbox" id="setting_display-private_checkbox">
+							<span id="setting_display-private_switch" class="slider"></span>
+						</label>
+					</div>
+					<div id="setting_reset-input">
+						　入力のリセット：<label class="toggle_switch">
+							<input type="checkbox" id="setting_reset-input_checkbox">
+							<span id="setting_reset-input_switch" class="slider"></span>
+						</label>
+					</div>
+					<div id="setting_singer">
+						　歌手の選択方法：<label class="toggle_switch">
+							<input type="checkbox" id="setting_singer_checkbox" checked>
+							<span id="setting_singer_switch" class="slider"></span>
+						</label>
+					</div>
+					<span id="setting_singer_display">アイコン</span>
+					<div id="setting_button_container">
+						<a href="#" id="setting_default">リセット</a>
+						<a href="#" id="setting_confirm"> 確定 </a>
+					</div>
 				</div>
 			</div>
+			<div id="control_numpad" class="hidden"></div>
 		</div>
-		<div id="control_numpad" class="hidden"></div>
     </body>
 </html>

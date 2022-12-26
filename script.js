@@ -68,7 +68,7 @@ var video_idx = {
 	date : 1
 };
 
-var build_version = "2022-12-26-2";
+var build_version = "2022-12-27-1";
 
 /* control / memories */
 // stores whats currently looking up
@@ -99,6 +99,11 @@ var max_display = 100;
 // if on, display private entries despite not accessable
 var do_display_hidden = false;
 
+// if the previous input should be cleared when user tap input box
+var do_clear_input = false;
+
+// if user prefer to text or picture selection
+var use_singer_icon = true;
 
 // ram for searching (entry_processed)
 //var entry_proc = new Array(song.length).fill([]);
@@ -116,9 +121,12 @@ $(document).ready(function() {
 
 $(function() {
 	// calling menu
-	$(document).on("click", "#nav_menu", function() {
+	$(document).on("click", "#nav_menu", function(e) {
+		// disable going back to top
+		e.preventDefault();
 		$("#menu_container").toggleClass("hidden");
 		$("#nav_menu").toggleClass("menu_opened");
+		$(document.body).toggleClass("no_scroll");
 	});
 	
 	// click on fog to close menu
@@ -148,11 +156,13 @@ $(function() {
 			// nothing implemented here
 			$("#menu_container").addClass("hidden");
 			$("#nav_menu").removeClass("menu_opened");
+			$(document.body).removeClass("no_scroll");
 		}
 	});
 	
 	// menu information
 	$(document).on("click", "#menu_info", function() {
+		$("#popup_container").removeClass("hidden");
 		$("#information").removeClass("hidden");
 		$("#menu_container").addClass("hidden");
 		$("#nav_menu").removeClass("menu_opened");
@@ -160,6 +170,7 @@ $(function() {
 	
 	// menu settings
 	$(document).on("click", "#menu_setting", function() {
+		$("#popup_container").removeClass("hidden");
 		$("#setting").removeClass("hidden");
 		$("#menu_container").addClass("hidden");
 		$("#nav_menu").removeClass("menu_opened");
@@ -169,28 +180,59 @@ $(function() {
 	$(document).on("click", "#information", function(e) {
 		if (!($(e.target).parents(".defog").length ||  $(e.target).hasClass("defog"))) {
 			$("#information").addClass("hidden");
+			$("#popup_container").addClass("hidden");
+			$(document.body).removeClass("no_scroll");
 		}
 	});
 	
-	// do diplay hidden switch update
-	$(document).on("change", ".toggle_switch", function(e) {
+	// setting - do diplay hidden switch update
+	$(document).on("change", "#setting_display-private_checkbox", function(e) {
 		do_display_hidden = e.target.checked;
 	});
 	
-	// settings reset to default
-	$(document).on("click", "#setting_default", function() {
+	// setting - reset input
+	$(document).on("change", "#setting_reset-input_checkbox", function(e) {
+		do_clear_input = e.target.checked;
+	});
+	
+	// setting - singer selection
+	$(document).on("change", "#setting_singer_checkbox", function(e) {
+		use_singer_icon = e.target.checked;
+		$("#setting_singer_display").html(use_singer_icon ? "アイコン" : "　名前　");
+	});
+	
+	// setting - reset to default
+	$(document).on("click", "#setting_default", function(e) {
+		// prevent going back to top
+		e.preventDefault();
 		// revert value
 		max_display = 100;
 		do_display_hidden = false;
+		do_clear_input = false;
+		use_singer_icon = true;
 		
 		// update display
 		$("#setting_max-display_value").html(max_display);
 		$("#setting_display-private_checkbox").prop("checked", do_display_hidden);
+		$("#setting_reset-input_checkbox").prop("checked", do_clear_input);
+		$("#setting_singer_checkbox").prop("checked", use_singer_icon);
+		$("#setting_singer_display").html(use_singer_icon ? "アイコン" : "　名前　");
 	});
 	
-	// settings confirm
-	$(document).on("click", "#setting_confirm", function() {
+	// setting - confirm
+	$(document).on("click", "#setting_confirm", function(e) {
+		// prevent going back to top
+		e.preventDefault();
 		$("#setting").addClass("hidden");
+		$("#popup_container").addClass("hidden");
+		$(document.body).removeClass("no_scroll");
+		if (use_singer_icon) {
+			$(".singer_container").addClass("hidden");
+			$(".singer_icon_container").removeClass("hidden");
+		} else {
+			$(".singer_container").removeClass("hidden");
+			$(".singer_icon_container").addClass("hidden");
+		}
 		loading = "";
 		search();
 	});
@@ -211,6 +253,13 @@ $(function() {
 	$(document).on("keydown", function(e) {
 		if (e.keyCode === 13) {
 			$("#input").blur();
+		}
+	});
+	
+	// reset input
+	$(document).on("focus", "#input", function(e) {
+		if (do_clear_input) {
+			$(e.target).val("");
 		}
 	});
 	
@@ -244,6 +293,27 @@ $(function() {
 		loading = "";
 		search();
 	});
+	
+	// singer selection (via icon)
+	$(document).on("click", ".singer_icon", function() {
+		var e = $(this).attr("id");
+		var selected = -1;
+		switch (e) {
+			case "icon_kirara":
+				selected = 2;
+				break;
+			case "icon_momo":
+				selected = 1;
+				break;
+			case "icon_nia":
+				selected = 0;
+				break;
+		}
+		singer_chosen[selected] ^= 1;
+		$(".sing_sel_" + selected).toggleClass("selected");
+		loading = "";
+		search()
+	})
 	
 	// hide song
 	$(document).on("click", ".song_name_container", function(e) {
