@@ -68,7 +68,7 @@ var video_idx = {
 	date : 1
 };
 
-var build_version = "2022-12-27-3";
+var build_version = "2022-12-27-2";
 
 /* control / memories */
 // stores whats currently looking up

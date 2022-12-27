@@ -209,7 +209,7 @@ a {
 	top : 50%;
 	transform: translate(-50%, -50%);
 	width : 70vw;
-	height : 40vh;
+	height : 80vw;
 	background-color : MediumPurple;
 	color : Snow;
 	font-size : 4vw;
@@ -219,11 +219,7 @@ a {
 }
 
 #info_defog>div {
-	position : absolute;
-	bottom : 3vh;
-	width : 100%;
-	left : 50%;
-	transform: translate(-50%, 0);
+	margin : 24vw 0vw;
 }
 
 #info_defog>div>a {
