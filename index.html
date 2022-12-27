@@ -3,6 +3,12 @@
         <meta charset="UTF-8">
 		<title>ぷちここ歌まとめ</title>
 		<link rel="icon" type="image/gif" href="icon/icon.gif">
+		<script>
+			if (!window.location.hash.includes("#reset")) {
+				window.location.href += "#reset";
+				window.location.reload();
+			}
+		</script>
 		<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
 		<script type="text/javascript" src="entry.js"></script>
 		<script type="text/javascript" src="song.js"></script>
