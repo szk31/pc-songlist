@@ -1,3 +1,14 @@
+/* nav plug-in */
+#nav_search_random {
+	padding: max(1vw, 8px) max(2vw, 16px) max(1vw, 8px) max(1vw, 8px);
+	content : url("icon/random.png");
+	width : max(8vw, 64px);
+	height : max(8vw, 64px);
+}
+
+#nav_search_random.disabled {
+	opacity: 0.4;
+}
 /* inputs section */
 #input_container {
 	display : flex;
@@ -25,7 +36,6 @@
 .singer_container {
 	height : 7.5vw;
 	font-size : 4.8vw;
-	text-align : center;
 	margin-bottom : 1.5vw;
 }
 
@@ -36,7 +46,6 @@
 	border-radius: 2vw;
 	margin: 0vw 1.2vw;
 	background : DimGrey;
-	color : LightGrey;
 	text-align : center;
 }
 

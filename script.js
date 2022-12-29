@@ -68,7 +68,7 @@ var video_idx = {
 	date : 1
 };
 
-var build_version = "2022-12-27-2";
+var build_version = "2022-12-30-1";
 
 /* control / memories */
 // stores whats currently looking up
@@ -123,7 +123,7 @@ $(document).ready(function() {
 });
 
 $(function() {
-	// calling menu
+	// nav - menu
 	$(document).on("click", "#nav_menu", function(e) {
 		// disable going back to top
 		e.preventDefault();
@@ -135,7 +135,18 @@ $(function() {
 		$(document.body).toggleClass("no_scroll");
 	});
 	
-	// click on fog to close menu
+	// nav - to_top
+	$(document).on("click", "#nav_to_top", function(e) {
+		e.preventDefault();
+		if (prevent_menu_popup) {
+			return;
+		}
+		$("html,body").animate({
+			scrollTop: 0
+		}, "fast");
+	});
+	
+	// menu -fog> return
 	$(document).on("click", "#menu_container", function(e) {
 		if (!($(e.target).parents(".defog").length || $(e.target).hasClass("defog"))) {
 			$("#menu_container").addClass("hidden");
@@ -144,7 +155,7 @@ $(function() {
 		}
 	});
 	
-	// menu to page
+	// menu -> page
 	$(document).on("click", ".menu2page", function(e) {
 		var target = ($(e.target).attr("id")).replace("menu2page_", "");
 		var target_id = -1;
@@ -167,7 +178,7 @@ $(function() {
 		}
 	});
 	
-	// menu information
+	// menu - information
 	$(document).on("click", "#menu_info", function() {
 		$("#popup_container").removeClass("hidden");
 		$("#information").removeClass("hidden");
@@ -176,7 +187,7 @@ $(function() {
 		prevent_menu_popup = true;
 	});
 	
-	// menu settings
+	// menu - settings
 	$(document).on("click", "#menu_setting", function() {
 		$("#popup_container").removeClass("hidden");
 		$("#setting").removeClass("hidden");
@@ -185,7 +196,7 @@ $(function() {
 		prevent_menu_popup = true;
 	});
 	
-	// return from info
+	// information -fog> return
 	$(document).on("click", "#information", function(e) {
 		if (!($(e.target).parents(".defog").length ||  $(e.target).hasClass("defog"))) {
 			$("#information").addClass("hidden");
@@ -195,23 +206,23 @@ $(function() {
 		}
 	});
 	
-	// setting - do diplay hidden switch update
+	// setting - 1 : do diplay hidden switch update
 	$(document).on("change", "#setting_display-private_checkbox", function(e) {
 		do_display_hidden = e.target.checked;
 	});
 	
-	// setting - reset input
+	// setting - 2 : reset input
 	$(document).on("change", "#setting_reset-input_checkbox", function(e) {
 		do_clear_input = e.target.checked;
 	});
 	
-	// setting - singer selection
+	// setting - 3 : singer selection
 	$(document).on("change", "#setting_singer_checkbox", function(e) {
 		use_singer_icon = e.target.checked;
 		$("#setting_singer_display").html(use_singer_icon ? "アイコン" : "　名前　");
 	});
 	
-	// setting - reset to default
+	// setting - 90 : reset to default
 	$(document).on("click", "#setting_default", function(e) {
 		// prevent going back to top
 		e.preventDefault();
@@ -229,7 +240,7 @@ $(function() {
 		$("#setting_singer_display").html(use_singer_icon ? "アイコン" : "　名前　");
 	});
 	
-	// setting - confirm
+	// setting - 91 : confirm
 	$(document).on("click", "#setting_confirm", function(e) {
 		// prevent going back to top
 		e.preventDefault();
@@ -247,38 +258,28 @@ $(function() {
 		loading = "";
 		search();
 	});
-	
-	// return to top of page (anchor to top does not work as nav bar exists)
-	$(document).on("click", "#nav_to_top", function(e) {
-		e.preventDefault();
-		if (prevent_menu_popup) {
-			return;
-		}
-		$("html,body").animate({
-			scrollTop: 0
-		}, "fast");
-	});
-	
-	// search
+		
+	// search - input
 	$(document).on("blur", "#input", function() {
 		search();
 	});
 	
-	// enter -> blur
+	// search - input::enter -> blur
 	$(document).on("keydown", function(e) {
 		if (e.keyCode === 13) {
 			$("#input").blur();
 		}
 	});
 	
-	// reset input
+	// search - input::on_click -> reset
 	$(document).on("focus", "#input", function(e) {
 		if (do_clear_input) {
 			$(e.target).val("");
+			$("#nav_search_random").removeClass("disabled");
 		}
 	});
 	
-	// switch between input method
+	// search - switch
 	$(document).on("click", "#switch_method", function() {
 		$("#input").val("");
 		searching_song_name ^= 1;
@@ -288,7 +289,7 @@ $(function() {
 		$("#input").focus();
 	});
 	
-	// singer selection
+	// search - singer - name
 	$(document).on("click", ".singer_select", function() {
 		var e = this.innerHTML;
 		var selected = -1;
@@ -309,7 +310,7 @@ $(function() {
 		search();
 	});
 	
-	// singer selection (via icon)
+	// search - singer - icon
 	$(document).on("click", ".singer_icon", function() {
 		var e = $(this).attr("id");
 		var selected = -1;
@@ -330,7 +331,47 @@ $(function() {
 		search()
 	})
 	
-	// hide song
+	// search - random
+	$(document).on("click", "#nav_search_random", function() {
+		if($(this).hasClass("disabled")) {
+			return;
+		}
+		// check if the song has any visibile record
+		var random_song,
+			found = trial = 0,
+			sel_member = 7;
+		for (var i in singer_chosen) {
+			if (!singer_chosen[i]) {
+				sel_member -= 1 << i;
+			}
+		}
+		if (sel_member === 0) {
+			// no body got selected so
+			return;
+		}
+		do {
+			random_song = Math.floor(Math.random() * song.length);
+			for (var i in entry) {
+				if (entry[i][entry_idx.song_id] === random_song) {
+					// check if all member
+					if (sel_member !== 7) {
+						if (!(sel_member & entry[i][entry_idx.type])) {
+							continue;
+						}
+					}
+					if ((!do_display_hidden) && is_private(i)) {
+						continue;
+					}
+					found++;
+					break;
+				}
+			}
+		} while (found === 0);
+		$("#input").val(song[random_song][song_idx.name]);
+		search();
+	});
+	
+	// search - song - hide_song
 	$(document).on("click", ".song_name_container", function(e) {
 		if (!$(e.target).hasClass("song_copy_icon")) {
 			var f = parseInt($(this).attr("id"));
@@ -347,13 +388,13 @@ $(function() {
 		}
 	})
 
-	// copy song info
+	// search - song - copy_name
 	$(document).on("click", ".song_copy_icon", function() {
 		var e = parseInt($(this).attr("id").replace("copy_name_", ""));
 		navigator.clipboard.writeText(song[e][song_idx.name]);
 	});
 	
-	// share
+	// search - entry - share
 	$(document).on("click", ".entry_share", function() {
 		var entry_id = parseInt($(this).attr("id").replace("entry_", ""));
 		// get video title
@@ -386,9 +427,13 @@ function search() {
 	if (e === "") {
 		// clear current list
 		$("#search_display").html("");
+		// enable random
+		$("#nav_search_random").removeClass("disabled");
 		return;
 	}
 	// not empty input
+	// disable random
+	$("#nav_search_random").addClass("disabled");
 	var series_name = "";
 	for (var i in series_lookup) {
 		for (var j in series_lookup[i]) {
@@ -427,6 +472,22 @@ function search() {
 			break;
 		}
 	}
+	// sort exact song name to top
+	f.sort(function (a, b) {
+		if (song[a][song_idx.name].trim().toLowerCase() === e.toLowerCase()) {
+			// exist a record same to input
+			if (song[b][song_idx.name].trim().toLowerCase() === e.toLowerCase()) {
+				// if the other record is also same to input
+				return 0;
+			} else {
+				return -1;
+			}
+		} else {
+			if (song[b][song_idx.name].trim().toLowerCase() === e.toLowerCase()) {
+				return 1;
+			}
+		}
+	});
 	hit_counter = 0;
 	for (var i = 0; i < counter; ++i) {
 		for (var j = 0; j < entry.length; ++j) {
