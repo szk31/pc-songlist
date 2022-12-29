@@ -134,6 +134,46 @@ $(function() {
 		$("#nav_menu").toggleClass("menu_opened");
 		$(document.body).toggleClass("no_scroll");
 	});
+		
+	// nav - random
+	$(document).on("click", "#nav_search_random", function() {
+		if($(this).hasClass("disabled")) {
+			return;
+		}
+		// check if the song has any visibile record
+		var random_song,
+			found = trial = 0,
+			sel_member = 7;
+		for (var i in singer_chosen) {
+			if (!singer_chosen[i]) {
+				sel_member -= 1 << i;
+			}
+		}
+		if (sel_member === 0) {
+			// no body got selected so
+			return;
+		}
+		do {
+			random_song = Math.floor(Math.random() * song.length);
+			for (var i in entry) {
+				if (entry[i][entry_idx.song_id] === random_song) {
+					// check if all member
+					if (sel_member !== 7) {
+						if (!(sel_member & entry[i][entry_idx.type])) {
+							continue;
+						}
+					}
+					if ((!do_display_hidden) && is_private(i)) {
+						continue;
+					}
+					found++;
+					break;
+				}
+			}
+		} while (found === 0);
+		$("#input").val(song[random_song][song_idx.name]);
+		search();
+	});
 	
 	// nav - to_top
 	$(document).on("click", "#nav_to_top", function(e) {
@@ -330,46 +370,6 @@ $(function() {
 		loading = "";
 		search()
 	})
-	
-	// search - random
-	$(document).on("click", "#nav_search_random", function() {
-		if($(this).hasClass("disabled")) {
-			return;
-		}
-		// check if the song has any visibile record
-		var random_song,
-			found = trial = 0,
-			sel_member = 7;
-		for (var i in singer_chosen) {
-			if (!singer_chosen[i]) {
-				sel_member -= 1 << i;
-			}
-		}
-		if (sel_member === 0) {
-			// no body got selected so
-			return;
-		}
-		do {
-			random_song = Math.floor(Math.random() * song.length);
-			for (var i in entry) {
-				if (entry[i][entry_idx.song_id] === random_song) {
-					// check if all member
-					if (sel_member !== 7) {
-						if (!(sel_member & entry[i][entry_idx.type])) {
-							continue;
-						}
-					}
-					if ((!do_display_hidden) && is_private(i)) {
-						continue;
-					}
-					found++;
-					break;
-				}
-			}
-		} while (found === 0);
-		$("#input").val(song[random_song][song_idx.name]);
-		search();
-	});
 	
 	// search - song - hide_song
 	$(document).on("click", ".song_name_container", function(e) {
