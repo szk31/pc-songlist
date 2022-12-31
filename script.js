@@ -68,7 +68,7 @@ var video_idx = {
 	date : 1
 };
 
-var version = "2022-12-31-1";
+var version = "2022-12-31-2";
 
 /* control / memories */
 // stores whats currently looking up
@@ -521,6 +521,10 @@ function update_display() {
 			if (!(sel_member & entry[hits[i]][entry_idx.type])) {
 				continue;
 			}
+		}
+		// skip if private
+		if ((!do_display_hidden) && is_private(hits[i])) {
+			continue;
 		}
 		// if new song
 		if (current_song !== entry[hits[i]][entry_idx.song_id]) {
