@@ -68,7 +68,7 @@ var video_idx = {
 	date : 1
 };
 
-var build_version = "2022-12-30-1";
+var version = "2022-12-31-1";
 
 /* control / memories */
 // stores whats currently looking up
@@ -109,16 +109,17 @@ var do_clear_input = false;
 var use_singer_icon = true;
 
 // ram for searching (entry_processed)
-//var entry_proc = new Array(song.length).fill([]);
+var entry_proc = [];
 
 $(document).ready(function() {
 	$("#input").val("");
-	/*
+	for (var i in song) {
+		entry_proc[i] = [];
+	}
 	for (var i = 0; i < entry.length; ++i) {
 		entry_proc[entry[i][0]].push(i);
-		console.log("pushing " + i + " into entry_proc[" + entry[i][0] + "]", entry_proc[entry[i][0]].length);
-	}*/
-	$("#info_version").html(build_version);
+	}
+	$("#info_version").html(version);
 	$("#info_last-update").html(video[video.length - 1][video_idx.date]);
 });
 
@@ -155,7 +156,7 @@ $(function() {
 		}
 		do {
 			random_song = Math.floor(Math.random() * song.length);
-			for (var i in entry) {
+			for (var i in entry_proc[random_song]) {
 				if (entry[i][entry_idx.song_id] === random_song) {
 					// check if all member
 					if (sel_member !== 7) {
@@ -415,7 +416,7 @@ $(function() {
 	})
 });
 
-var hits = new Array(max_display);
+var hits = new Array();
 var hit_counter = 0;
 
 function search() {
@@ -490,19 +491,11 @@ function search() {
 	});
 	hit_counter = 0;
 	for (var i = 0; i < counter; ++i) {
-		for (var j = 0; j < entry.length; ++j) {
-			if (f[i] === entry[j][entry_idx.song_id]) {
-				if ((!do_display_hidden) && is_private(j)) {
-					continue;
-				}
-				hits[hit_counter++] = j;
+		for (var j in entry_proc[f[i]]) {
+			if ((!do_display_hidden) && is_private(j)) {
+				continue;
 			}
-			if (hit_counter >= max_display) {
-				break;
-			}
-		}
-		if (hit_counter >= max_display) {
-			break;
+			hits[hit_counter++] = entry_proc[f[i]][j];
 		}
 	}
 	update_display();
@@ -521,6 +514,7 @@ function update_display() {
 	var loaded_song = new Array();
 	var loaded_count = 0;
 	var new_html = "";
+	var displayed = 0;
 	for (var i = 0; i < hit_counter; ++i) {
 		// check if all member
 		if (sel_member !== 7) {
@@ -571,6 +565,9 @@ function update_display() {
 			}
 		}
 		new_html += ("<div class=\"entry_container singer_" + entry[hits[i]][entry_idx.type] + (is_mem ? "m" : "") + " song_" + current_song + (hide_song.includes(current_song) ? " hidden" : "") + "\"><a href=\"https://youtu.be/" + video[entry[hits[i]][entry_idx.video]][video_idx.id] + (entry[hits[i]][entry_idx.time] === 0 ? "" : ("?t=" + entry[hits[i]][entry_idx.time])) +"\" target=\"_blank\"><div class=\"entry_primary\"><div class=\"entry_date\">" + display_date(video[entry[hits[i]][entry_idx.video]][video_idx.date]) + "</div><div class=\"entry_singer\">" + singer_lookup[entry[hits[i]][entry_idx.type]] + "</div><div class=\"mem_display\">" + (is_mem ? "メン限" : "") + "</div><div class=\"entry_share\" id=\"entry_" + hits[i] + "\" onclick=\"return false;\"></div></div>" + (no_note ? "" : ("<div class=\"entry_note\">" + note + "</div>")) + "</a></div>");
+		if (++displayed >= max_display) {
+			break;
+		}
 	}
 	$("#search_display").html(new_html + "</div>");
 	// check all hiden songs
