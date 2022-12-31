@@ -68,7 +68,7 @@ var video_idx = {
 	date : 1
 };
 
-var version = "2022-12-31-2";
+var version = "2022-12-31-3";
 
 /* control / memories */
 // stores whats currently looking up
@@ -157,19 +157,17 @@ $(function() {
 		do {
 			random_song = Math.floor(Math.random() * song.length);
 			for (var i in entry_proc[random_song]) {
-				if (entry[i][entry_idx.song_id] === random_song) {
-					// check if all member
-					if (sel_member !== 7) {
-						if (!(sel_member & entry[i][entry_idx.type])) {
-							continue;
-						}
-					}
-					if ((!do_display_hidden) && is_private(i)) {
+				// check if all member
+				if (sel_member !== 7) {
+					if (!(sel_member & entry[entry_proc[random_song][i]][entry_idx.type])) {
 						continue;
 					}
-					found++;
-					break;
 				}
+				if ((!do_display_hidden) && is_private(i)) {
+					continue;
+				}
+				found++;
+				break;
 			}
 		} while (found === 0);
 		$("#input").val(song[random_song][song_idx.name]);
