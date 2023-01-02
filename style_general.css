@@ -281,10 +281,9 @@ a {
 }
 
 #setting_singer_display {
-	position: relative;
-	display: inline-block;
-	top : -4.8vw;
-	left : 20vw;
+	position: absolute;
+	top : 44.4vw;
+	left : 49vw;
 	font-size : 3vw;
 }
 

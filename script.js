@@ -68,7 +68,7 @@ var video_idx = {
 	date : 1
 };
 
-var version = "2022-12-31-3";
+var version = "2023-01-03-1";
 
 /* control / memories */
 // stores whats currently looking up
@@ -108,6 +108,9 @@ var do_clear_input = false;
 // if user prefer to text or picture selection
 var use_singer_icon = true;
 
+// if random requirement is ignored (input being blank)
+var do_random_anyway = false;
+
 // ram for searching (entry_processed)
 var entry_proc = [];
 
@@ -138,7 +141,7 @@ $(function() {
 		
 	// nav - random
 	$(document).on("click", "#nav_search_random", function() {
-		if($(this).hasClass("disabled")) {
+		if($(this).hasClass("disabled") && !do_random_anyway) {
 			return;
 		}
 		// check if the song has any visibile record
@@ -163,7 +166,7 @@ $(function() {
 						continue;
 					}
 				}
-				if ((!do_display_hidden) && is_private(i)) {
+				if ((!do_display_hidden) && is_private(entry_proc[random_song][i])) {
 					continue;
 				}
 				found++;
@@ -261,6 +264,11 @@ $(function() {
 		$("#setting_singer_display").html(use_singer_icon ? "アイコン" : "　名前　");
 	});
 	
+	// setting - 4 : ignore random requirement
+	$(document).on("change", "#setting_random_checkbox", function(e) {
+		do_random_anyway = e.target.checked;
+	});
+	
 	// setting - 90 : reset to default
 	$(document).on("click", "#setting_default", function(e) {
 		// prevent going back to top
@@ -270,6 +278,7 @@ $(function() {
 		do_display_hidden = false;
 		do_clear_input = false;
 		use_singer_icon = true;
+		do_random_anyway = false;
 		
 		// update display
 		$("#setting_max-display_value").html(max_display);
@@ -277,6 +286,7 @@ $(function() {
 		$("#setting_reset-input_checkbox").prop("checked", do_clear_input);
 		$("#setting_singer_checkbox").prop("checked", use_singer_icon);
 		$("#setting_singer_display").html(use_singer_icon ? "アイコン" : "　名前　");
+		$("#setting_random_checkbox").prop("checked", do_random_anyway);
 	});
 	
 	// setting - 91 : confirm
@@ -293,6 +303,15 @@ $(function() {
 		} else {
 			$(".singer_container").removeClass("hidden");
 			$(".singer_icon_container").addClass("hidden");
+		}
+		if (do_random_anyway) {
+			$("#nav_search_random").removeClass("disabled");
+		} else {
+			if ($("#input").val() === "") {
+				$("#nav_search_random").removeClass("disabled");
+			} else {
+				$("#nav_search_random").addClass("disabled");
+			}
 		}
 		loading = "";
 		search();
@@ -432,7 +451,9 @@ function search() {
 	}
 	// not empty input
 	// disable random
-	$("#nav_search_random").addClass("disabled");
+	if (!do_random_anyway) {
+		$("#nav_search_random").addClass("disabled");
+	}
 	var series_name = "";
 	for (var i in series_lookup) {
 		for (var j in series_lookup[i]) {
