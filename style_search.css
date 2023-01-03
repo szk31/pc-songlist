@@ -395,3 +395,31 @@
 .singer_15>a {
 	color : bbbbbb !important;
 }
+
+/* search autocomplete section */
+#search_auto {
+	position : absolute;
+	left : 0;
+	top : 22vw;
+}
+
+.auto_pannel {
+	background-color : LightGrey;
+	height : 12vw;
+	width : 80vw;
+	margin-left : 4vw;
+}
+
+.auto_reading {
+	position: relative;
+	transform: translateY(40%);
+	padding : 0.5vw;
+	font-size : 3.2vw;
+	height : 4vw;
+}
+
+.auto_display {
+	padding : 0.25vw;
+	font-size : 4.8vw;
+	height : 6vw;
+}

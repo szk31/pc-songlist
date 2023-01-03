@@ -15,11 +15,17 @@
 html, body {
 	padding : 0px;
 	margin : 0px;
+	touch-action : manipulation;
 }
 
 html {
 	background-color : LightSlateGrey;
 	font-family : MPLUS1p;
+}
+
+body:not(#input) {
+	-webkit-user-select : none; /* Safari */
+	user-select : none; /* Standard syntax */
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */

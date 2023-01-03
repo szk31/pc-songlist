@@ -68,7 +68,7 @@ var video_idx = {
 	date : 1
 };
 
-var version = "2023-01-03-1";
+var version = "2023-01-04-1";
 
 /* control / memories */
 // stores whats currently looking up
@@ -88,6 +88,9 @@ var current_page = 0;
 
 // prevent menu from opening when info or setting is up
 var prevent_menu_popup = false;
+
+// max display boxes of autocomplete
+const auto_display_max = 12;
 
 /*  page IDs
  *
@@ -127,117 +130,121 @@ $(document).ready(function() {
 });
 
 $(function() {
-	// nav - menu
-	$(document).on("click", "#nav_menu", function(e) {
-		// disable going back to top
-		e.preventDefault();
-		if (prevent_menu_popup) {
-			return;
-		}
-		$("#menu_container").toggleClass("hidden");
-		$("#nav_menu").toggleClass("menu_opened");
-		$(document.body).toggleClass("no_scroll");
-	});
-		
-	// nav - random
-	$(document).on("click", "#nav_search_random", function() {
-		if($(this).hasClass("disabled") && !do_random_anyway) {
-			return;
-		}
-		// check if the song has any visibile record
-		var random_song,
-			found = trial = 0,
-			sel_member = 7;
-		for (var i in singer_chosen) {
-			if (!singer_chosen[i]) {
-				sel_member -= 1 << i;
+	{ // nav
+		// nav - menu
+		$(document).on("click", "#nav_menu", function(e) {
+			// disable going back to top
+			e.preventDefault();
+			if (prevent_menu_popup) {
+				return;
 			}
-		}
-		if (sel_member === 0) {
-			// no body got selected so
-			return;
-		}
-		do {
-			random_song = Math.floor(Math.random() * song.length);
-			for (var i in entry_proc[random_song]) {
-				// check if all member
-				if (sel_member !== 7) {
-					if (!(sel_member & entry[entry_proc[random_song][i]][entry_idx.type])) {
+			$("#menu_container").toggleClass("hidden");
+			$("#nav_menu").toggleClass("menu_opened");
+			$(document.body).toggleClass("no_scroll");
+		});
+		
+		// nav - random
+		$(document).on("click", "#nav_search_random", function() {
+			if($(this).hasClass("disabled") && !do_random_anyway) {
+				return;
+			}
+			// check if the song has any visibile record
+			var random_song,
+				found = trial = 0,
+				sel_member = 7;
+			for (var i in singer_chosen) {
+				if (!singer_chosen[i]) {
+					sel_member -= 1 << i;
+				}
+			}
+			if (sel_member === 0) {
+				// no body got selected so
+				return;
+			}
+			do {
+				random_song = Math.floor(Math.random() * song.length);
+				for (var i in entry_proc[random_song]) {
+					// check if all member
+					if (sel_member !== 7) {
+						if (!(sel_member & entry[entry_proc[random_song][i]][entry_idx.type])) {
+							continue;
+						}
+					}
+					if ((!do_display_hidden) && is_private(entry_proc[random_song][i])) {
 						continue;
 					}
+					found++;
+					break;
 				}
-				if ((!do_display_hidden) && is_private(entry_proc[random_song][i])) {
-					continue;
-				}
-				found++;
-				break;
+			} while (found === 0);
+			$("#input").val(song[random_song][song_idx.name]);
+			search();
+		});
+		
+		// nav - to_top
+		$(document).on("click", "#nav_to_top", function(e) {
+			e.preventDefault();
+			if (prevent_menu_popup) {
+				return;
 			}
-		} while (found === 0);
-		$("#input").val(song[random_song][song_idx.name]);
-		search();
-	});
+			$("html,body").animate({
+				scrollTop: 0
+			}, "fast");
+		});
+	}
 	
-	// nav - to_top
-	$(document).on("click", "#nav_to_top", function(e) {
-		e.preventDefault();
-		if (prevent_menu_popup) {
-			return;
-		}
-		$("html,body").animate({
-			scrollTop: 0
-		}, "fast");
-	});
-	
-	// menu -fog> return
-	$(document).on("click", "#menu_container", function(e) {
-		if (!($(e.target).parents(".defog").length || $(e.target).hasClass("defog"))) {
+	{ // menu
+		// menu -fog> return
+		$(document).on("click", "#menu_container", function(e) {
+			if (!($(e.target).parents(".defog").length || $(e.target).hasClass("defog"))) {
+				$("#menu_container").addClass("hidden");
+				$("#nav_menu").removeClass("menu_opened");
+				$(document.body).removeClass("no_scroll");
+			}
+		});
+		
+		// menu -> page
+		$(document).on("click", ".menu2page", function(e) {
+			var target = ($(e.target).attr("id")).replace("menu2page_", "");
+			var target_id = -1;
+			switch (target) {
+				case "search" :
+					target_id = 0;
+					break;
+				case "repertoire" :
+					target_id = 1;
+					break;
+			}
+			if (target_id !== current_page) {
+				current_page = target_id;
+				$(".menu2page_selected").removeClass("menu2page_selected");
+				$("#" + $(e.target).attr("id")).addClass("menu2page_selected");
+				// nothing implemented here
+				$("#menu_container").addClass("hidden");
+				$("#nav_menu").removeClass("menu_opened");
+				$(document.body).removeClass("no_scroll");
+			}
+		});
+		
+		// menu - information
+		$(document).on("click", "#menu_info", function() {
+			$("#popup_container").removeClass("hidden");
+			$("#information").removeClass("hidden");
 			$("#menu_container").addClass("hidden");
 			$("#nav_menu").removeClass("menu_opened");
-			$(document.body).removeClass("no_scroll");
-		}
-	});
-	
-	// menu -> page
-	$(document).on("click", ".menu2page", function(e) {
-		var target = ($(e.target).attr("id")).replace("menu2page_", "");
-		var target_id = -1;
-		switch (target) {
-			case "search" :
-				target_id = 0;
-				break;
-			case "repertoire" :
-				target_id = 1;
-				break;
-		}
-		if (target_id !== current_page) {
-			current_page = target_id;
-			$(".menu2page_selected").removeClass("menu2page_selected");
-			$("#" + $(e.target).attr("id")).addClass("menu2page_selected");
-			// nothing implemented here
+			prevent_menu_popup = true;
+		});
+		
+		// menu - settings
+		$(document).on("click", "#menu_setting", function() {
+			$("#popup_container").removeClass("hidden");
+			$("#setting").removeClass("hidden");
 			$("#menu_container").addClass("hidden");
 			$("#nav_menu").removeClass("menu_opened");
-			$(document.body).removeClass("no_scroll");
-		}
-	});
-	
-	// menu - information
-	$(document).on("click", "#menu_info", function() {
-		$("#popup_container").removeClass("hidden");
-		$("#information").removeClass("hidden");
-		$("#menu_container").addClass("hidden");
-		$("#nav_menu").removeClass("menu_opened");
-		prevent_menu_popup = true;
-	});
-	
-	// menu - settings
-	$(document).on("click", "#menu_setting", function() {
-		$("#popup_container").removeClass("hidden");
-		$("#setting").removeClass("hidden");
-		$("#menu_container").addClass("hidden");
-		$("#nav_menu").removeClass("menu_opened");
-		prevent_menu_popup = true;
-	});
-	
+			prevent_menu_popup = true;
+		});
+	}
+
 	// information -fog> return
 	$(document).on("click", "#information", function(e) {
 		if (!($(e.target).parents(".defog").length ||  $(e.target).hasClass("defog"))) {
@@ -248,189 +255,325 @@ $(function() {
 		}
 	});
 	
-	// setting - 1 : do diplay hidden switch update
-	$(document).on("change", "#setting_display-private_checkbox", function(e) {
-		do_display_hidden = e.target.checked;
-	});
-	
-	// setting - 2 : reset input
-	$(document).on("change", "#setting_reset-input_checkbox", function(e) {
-		do_clear_input = e.target.checked;
-	});
-	
-	// setting - 3 : singer selection
-	$(document).on("change", "#setting_singer_checkbox", function(e) {
-		use_singer_icon = e.target.checked;
-		$("#setting_singer_display").html(use_singer_icon ? "アイコン" : "　名前　");
-	});
-	
-	// setting - 4 : ignore random requirement
-	$(document).on("change", "#setting_random_checkbox", function(e) {
-		do_random_anyway = e.target.checked;
-	});
-	
-	// setting - 90 : reset to default
-	$(document).on("click", "#setting_default", function(e) {
-		// prevent going back to top
-		e.preventDefault();
-		// revert value
-		max_display = 100;
-		do_display_hidden = false;
-		do_clear_input = false;
-		use_singer_icon = true;
-		do_random_anyway = false;
+	{ // setting
+		// setting - 1 : do diplay hidden switch update
+		$(document).on("change", "#setting_display-private_checkbox", function(e) {
+			do_display_hidden = e.target.checked;
+		});
 		
-		// update display
-		$("#setting_max-display_value").html(max_display);
-		$("#setting_display-private_checkbox").prop("checked", do_display_hidden);
-		$("#setting_reset-input_checkbox").prop("checked", do_clear_input);
-		$("#setting_singer_checkbox").prop("checked", use_singer_icon);
-		$("#setting_singer_display").html(use_singer_icon ? "アイコン" : "　名前　");
-		$("#setting_random_checkbox").prop("checked", do_random_anyway);
-	});
-	
-	// setting - 91 : confirm
-	$(document).on("click", "#setting_confirm", function(e) {
-		// prevent going back to top
-		e.preventDefault();
-		$("#setting").addClass("hidden");
-		$("#popup_container").addClass("hidden");
-		$(document.body).removeClass("no_scroll");
-		prevent_menu_popup = false;
-		if (use_singer_icon) {
-			$(".singer_container").addClass("hidden");
-			$(".singer_icon_container").removeClass("hidden");
-		} else {
-			$(".singer_container").removeClass("hidden");
-			$(".singer_icon_container").addClass("hidden");
-		}
-		if (do_random_anyway) {
-			$("#nav_search_random").removeClass("disabled");
-		} else {
-			if ($("#input").val() === "") {
+		// setting - 2 : reset input
+		$(document).on("change", "#setting_reset-input_checkbox", function(e) {
+			do_clear_input = e.target.checked;
+		});
+		
+		// setting - 3 : singer selection
+		$(document).on("change", "#setting_singer_checkbox", function(e) {
+			use_singer_icon = e.target.checked;
+			$("#setting_singer_display").html(use_singer_icon ? "アイコン" : "　名前　");
+		});
+		
+		// setting - 4 : ignore random requirement
+		$(document).on("change", "#setting_random_checkbox", function(e) {
+			do_random_anyway = e.target.checked;
+		});
+		
+		// setting - 90 : reset to default
+		$(document).on("click", "#setting_default", function(e) {
+			// prevent going back to top
+			e.preventDefault();
+			// revert value
+			max_display = 100;
+			do_display_hidden = false;
+			do_clear_input = false;
+			use_singer_icon = true;
+			do_random_anyway = false;
+			
+			// update display
+			$("#setting_max-display_value").html(max_display);
+			$("#setting_display-private_checkbox").prop("checked", do_display_hidden);
+			$("#setting_reset-input_checkbox").prop("checked", do_clear_input);
+			$("#setting_singer_checkbox").prop("checked", use_singer_icon);
+			$("#setting_singer_display").html(use_singer_icon ? "アイコン" : "　名前　");
+			$("#setting_random_checkbox").prop("checked", do_random_anyway);
+		});
+		
+		// setting - 91 : confirm
+		$(document).on("click", "#setting_confirm", function(e) {
+			// prevent going back to top
+			e.preventDefault();
+			$("#setting").addClass("hidden");
+			$("#popup_container").addClass("hidden");
+			$(document.body).removeClass("no_scroll");
+			prevent_menu_popup = false;
+			if (use_singer_icon) {
+				$(".singer_container").addClass("hidden");
+				$(".singer_icon_container").removeClass("hidden");
+			} else {
+				$(".singer_container").removeClass("hidden");
+				$(".singer_icon_container").addClass("hidden");
+			}
+			if (do_random_anyway) {
 				$("#nav_search_random").removeClass("disabled");
 			} else {
-				$("#nav_search_random").addClass("disabled");
+				if ($("#input").val() === "") {
+					$("#nav_search_random").removeClass("disabled");
+				} else {
+					$("#nav_search_random").addClass("disabled");
+				}
 			}
-		}
-		loading = "";
-		search();
-	});
-		
-	// search - input
-	$(document).on("blur", "#input", function() {
-		search();
-	});
-	
-	// search - input::enter -> blur
-	$(document).on("keydown", function(e) {
-		if (e.keyCode === 13) {
-			$("#input").blur();
-		}
-	});
-	
-	// search - input::on_click -> reset
-	$(document).on("focus", "#input", function(e) {
-		if (do_clear_input) {
-			$(e.target).val("");
-			$("#nav_search_random").removeClass("disabled");
-		}
-	});
-	
-	// search - switch
-	$(document).on("click", "#switch_method", function() {
-		$("#input").val("");
-		searching_song_name ^= 1;
-		$("#input").attr("placeholder", searching_song_name ? "曲名/読みで検索" : "アーティスト名で検索");
-		$("#search_display").html("");
-		loading = "";
-		$("#input").focus();
-	});
-	
-	// search - singer - name
-	$(document).on("click", ".singer_select", function() {
-		var e = this.innerHTML;
-		var selected = -1;
-		switch (e) {
-			case "逢魔きらら":
-				selected = 2;
-				break;
-			case "胡桃澤もも":
-				selected = 1;
-				break;
-			case "看谷にぃあ":
-				selected = 0;
-				break;
-		}
-		singer_chosen[selected] ^= 1;
-		$(".sing_sel_" + selected).toggleClass("selected");
-		loading = "";
-		search();
-	});
-	
-	// search - singer - icon
-	$(document).on("click", ".singer_icon", function() {
-		var e = $(this).attr("id");
-		var selected = -1;
-		switch (e) {
-			case "icon_kirara":
-				selected = 2;
-				break;
-			case "icon_momo":
-				selected = 1;
-				break;
-			case "icon_nia":
-				selected = 0;
-				break;
-		}
-		singer_chosen[selected] ^= 1;
-		$(".sing_sel_" + selected).toggleClass("selected");
-		loading = "";
-		search()
-	})
-	
-	// search - song - hide_song
-	$(document).on("click", ".song_name_container", function(e) {
-		if (!$(e.target).hasClass("song_copy_icon")) {
-			var f = parseInt($(this).attr("id"));
-			if(!hide_song.includes(f)){
-				hide_song.push(f);
-			}else{
-				hide_song.splice(hide_song.indexOf(f), 1);
-			}
-			if (loading === "") {
+			loading = "";
+			search();
+		});
+	}
+
+	{ // search
+		// search - input - autocomplete
+		$(document).on("input", "#input", function() {
+			var e = $("#input").val().toLowerCase();
+			if (e === "") {
+				$("#search_auto").html("");
 				return;
 			}
-			$(".song_" + f).toggleClass("hidden");
-			$("#fold_" + f).toggleClass("closed");
-		}
-	})
-
-	// search - song - copy_name
-	$(document).on("click", ".song_copy_icon", function() {
-		var e = parseInt($(this).attr("id").replace("copy_name_", ""));
-		navigator.clipboard.writeText(song[e][song_idx.name]);
-	});
-	
-	// search - entry - share
-	$(document).on("click", ".entry_share", function() {
-		var entry_id = parseInt($(this).attr("id").replace("entry_", ""));
-		// get video title
-		const url = "https://www.youtube.com/watch?v=" + video[entry[entry_id][entry_idx.video]][video_idx.id];
-
-		fetch("https://noembed.com/embed?dataType=json&url=" + url)
-			.then(res => res.json())
-			.then(function(data) {
-				// title of unlisted / private video are returned a 401 error
-				if (data.title === undefined) {
-					alert("再アップ/非公開の動画を共有しないで下さい。");
-				} else {
-					var tweet = song[entry[entry_id][entry_idx.song_id]][song_idx.name].trim() + " / " + song[entry[entry_id][entry_idx.song_id]][song_idx.artist] + " @" + data.title + "\n(youtu.be/" + video[entry[entry_id][entry_idx.video]][video_idx.id] + "?t=" + entry[entry_id][entry_idx.time] + ") via [site on work]";
-					window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweet), "_blank");						
+			var auto_exact = [],
+				auto_other = [],
+				auto_exact_count = 0,
+				auto_other_count = 0;
+			// search for series name
+			for (var i in series_lookup) {
+				for (var j in series_lookup[i]) {
+					var f = series_lookup[i][j].indexOf(e);
+					if (f !== -1) {
+						// if string exist in series variations
+						auto_exact[auto_exact_count++] = i;
+						break;
+					}
 				}
-		  });
+			}
+			// if input consist of only hiragana
+			if (!/[^\u3040-\u309F\u30FC\u30F4]/.test(e) && searching_song_name) {
+				// search for reading
+				// should search for index of 1st char -> 2nd then try to fill up auto_exact first but who cares about loading time anyway
+				for (var i = 1; i < song.length; ++i) {
+					var f = song[i][song_idx.reading].indexOf(e);
+					switch (f) {
+						case  0 : // found, from beginning
+							auto_exact[auto_exact_count++] = i;
+							break;
+						case -1 : // not found
+							break;
+						default : // found, not from beginning
+							auto_other[auto_other_count++] = i;
+							break;
+					}
+					if (auto_exact_count >= auto_display_max) {
+						break;
+					}
+				}
+			} else if (searching_song_name) {
+				// search for song name
+				for (var i = 1; i < song.length; ++i) {
+					var f = song[i][song_idx.name].toLowerCase().indexOf(e);
+					switch (f) {
+						case  0 : // found, from beginning
+							auto_exact[auto_exact_count++] = i;
+							break;
+						case -1 : // not found
+							break;
+						default : // found, not from beginning
+							auto_other[auto_other_count++] = i;
+							break;
+					}
+					if (auto_exact_count >= auto_display_max) {
+						break;
+					}
+				}
+			} else {
+				// search for artist
+				// not implemented for now, or maybe forever
+			}
+			// display
+			var auto_display_count = 0;
+			var new_html = "";
+			for (var i in auto_exact) {
+				// data being number (song id) or string (series name)
+				var auto_reading, auto_display, song_name;
+				if (isNaN(parseInt(auto_exact[i]))) {
+					// series name
+					auto_reading = " ";
+					auto_display = song_name = auto_exact[i];
+				} else {
+					// song reading
+					var space_index = song[auto_exact[i]][song_idx.reading].indexOf(" ");
+					var song_reading = song[auto_exact[i]][song_idx.reading];
+					// if song reading contains input
+					if (song_reading.indexOf(e) === -1) {
+						// nope
+						if (space_index === -1) {
+							auto_reading = song_reading;
+						} else {
+							auto_reading = song_reading.substring(0, space_index);
+						}
+					} else {
+						if (space_index === -1) {
+							auto_reading = "<b>" + e + "</b>" + song_reading.substring(e.length);
+						} else {
+							auto_reading = "<b>" + e + "</b>" + song_reading.substring(e.length, space_index);
+						}
+					}
 
-	})
+					// search in song name anyway
+					song_name = song[auto_exact[i]][song_idx.name];
+					if (song_name.toLowerCase().indexOf(e) === -1) {
+						// not found, do nothing
+						auto_display = song[auto_exact[i]][song_idx.name];
+					} else {
+						// highlight in song name
+						var f = song_name.toLowerCase().indexOf(e);
+						auto_display = (f === 0 ? "" : song_name.substring(e)) + "<b>" + song_name.substring(song_name.toLowerCase().indexOf(e), song_name.toLowerCase().indexOf(e) + e.length) + "</b>" + song_name.substring(f + e.length);
+					}
+				}
+				new_html += ("<div id=\"" + song_name + "\" class=\"auto_pannel\"><div class=\"auto_reading\">" + auto_reading + "</div><div class=\"auto_display\">" + auto_display + "</div></div>");
+				auto_display_count++;
+			}
+			for (var i in auto_other) {
+				var song_name = song[auto_other[i]][song_idx.name];
+				var found_position = song_name.toLowerCase().indexOf(e);
+				if (found_position === -1) {
+					new_html += ("<div id=\"" + song_name + "\" class=\"auto_pannel\"><div class=\"auto_reading\"></div><div class=\"auto_display\">" + song_name + "</div></div>");
+				} else {
+					new_html += ("<div id=\"" + song_name + "\" class=\"auto_pannel\"><div class=\"auto_reading\"></div><div class=\"auto_display\">" + song_name.substring(0, found_position) + "<b>" + song_name.substring(found_position, found_position + e.length) + "</b>" + song_name.substring(found_position + e.length) + "</div></div>");
+				}
+				
+				if (++auto_display_count >= auto_display_max) {
+					break;
+				}
+			}
+			$("#search_auto").html(new_html);
+		});
+
+		$(document).on("click", ".auto_pannel", function() {
+			var e = $(this).attr("id");
+			// remove display
+			$("#search_auto").html("");
+			$("#input").val(e);
+			search();
+		});
+
+		// search - input - submit
+		$(document).on("blur", "#input", function() {
+			search();
+		});
+		
+		// search - input::enter -> blur
+		$(document).on("keydown", function(e) {
+			if (e.keyCode === 13) {
+				$("#input").blur();
+			}
+		});
+		
+		// search - input::on_click -> reset
+		$(document).on("focus", "#input", function(e) {
+			if (do_clear_input) {
+				$(e.target).val("");
+				$("#nav_search_random").removeClass("disabled");
+			}
+		});
+		
+		// search - switch
+		$(document).on("click", "#switch_method", function() {
+			$("#input").val("");
+			searching_song_name ^= 1;
+			$("#input").attr("placeholder", searching_song_name ? "曲名/読みで検索" : "アーティスト名で検索");
+			$("#search_display").html("");
+			loading = "";
+			$("#input").focus();
+		});
+		
+		// search - singer - name
+		$(document).on("click", ".singer_select", function() {
+			var e = this.innerHTML;
+			var selected = -1;
+			switch (e) {
+				case "逢魔きらら":
+					selected = 2;
+					break;
+				case "胡桃澤もも":
+					selected = 1;
+					break;
+				case "看谷にぃあ":
+					selected = 0;
+					break;
+			}
+			singer_chosen[selected] ^= 1;
+			$(".sing_sel_" + selected).toggleClass("selected");
+			loading = "";
+			search();
+		});
+		
+		// search - singer - icon
+		$(document).on("click", ".singer_icon", function() {
+			var e = $(this).attr("id");
+			var selected = -1;
+			switch (e) {
+				case "icon_kirara":
+					selected = 2;
+					break;
+				case "icon_momo":
+					selected = 1;
+					break;
+				case "icon_nia":
+					selected = 0;
+					break;
+			}
+			singer_chosen[selected] ^= 1;
+			$(".sing_sel_" + selected).toggleClass("selected");
+			loading = "";
+			search();
+		})
+		
+		// search - song - hide_song
+		$(document).on("click", ".song_name_container", function(e) {
+			if (!$(e.target).hasClass("song_copy_icon")) {
+				var f = parseInt($(this).attr("id"));
+				if(!hide_song.includes(f)){
+					hide_song.push(f);
+				}else{
+					hide_song.splice(hide_song.indexOf(f), 1);
+				}
+				if (loading === "") {
+					return;
+				}
+				$(".song_" + f).toggleClass("hidden");
+				$("#fold_" + f).toggleClass("closed");
+			}
+		});
+
+		// search - song - copy_name
+		$(document).on("click", ".song_copy_icon", function() {
+			var e = parseInt($(this).attr("id").replace("copy_name_", ""));
+			navigator.clipboard.writeText(song[e][song_idx.name]);
+		});
+		
+		// search - entry - share
+		$(document).on("click", ".entry_share", function() {
+			var entry_id = parseInt($(this).attr("id").replace("entry_", ""));
+			// get video title
+			const url = "https://www.youtube.com/watch?v=" + video[entry[entry_id][entry_idx.video]][video_idx.id];
+
+			fetch("https://noembed.com/embed?dataType=json&url=" + url)
+				.then(res => res.json())
+				.then(function(data) {
+					// title of unlisted / private video are returned a 401 error
+					if (data.title === undefined) {
+						alert("再アップ/非公開の動画を共有しないで下さい。");
+					} else {
+						var tweet = song[entry[entry_id][entry_idx.song_id]][song_idx.name].trim() + " / " + song[entry[entry_id][entry_idx.song_id]][song_idx.artist] + " @" + data.title + "\n(youtu.be/" + video[entry[entry_id][entry_idx.video]][video_idx.id] + "?t=" + entry[entry_id][entry_idx.time] + ") via [site on work]";
+						window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweet), "_blank");						
+					}
+			  });
+		});
+	}
+
 });
 
 var hits = new Array();
@@ -522,6 +665,7 @@ function search() {
 
 function update_display() {
 	$("#search_display").html("");
+	$("#search_auto").html("");
 	var current_song = -1;
 	var sel_member = 7;
 	for (var i in singer_chosen) {
@@ -561,6 +705,10 @@ function update_display() {
 			// you know what fuck this shit i will just add exception
 			if (song_name === "secret base ~君がくれたもの~") {
 				song_name_length = 0;
+			}
+			// case "みくみくにしてあげる♪【してやんよ】"
+			if (song_name === "みくみくにしてあげる♪【してやんよ】") {
+				song_name = "みくみくにしてあげる♪<br />【してやんよ】";
 			}
 			if (/([^~]+~+[^~])/g.test(song_name) && song_name_length >= 28) {
 				song_name = song_name.substring(0, song_name.search(/~/g)) + "<br />" + song_name.substring(song_name.search(/~/g));
