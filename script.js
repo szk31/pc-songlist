@@ -68,7 +68,7 @@ var video_idx = {
 	date : 1
 };
 
-var version = "2023-01-04-1";
+var version = "2023-01-05-1";
 
 /* control / memories */
 // stores whats currently looking up
@@ -90,7 +90,7 @@ var current_page = 0;
 var prevent_menu_popup = false;
 
 // max display boxes of autocomplete
-const auto_display_max = 12;
+var auto_display_max;
 
 /*  page IDs
  *
@@ -119,6 +119,7 @@ var entry_proc = [];
 
 $(document).ready(function() {
 	$("#input").val("");
+	// process data
 	for (var i in song) {
 		entry_proc[i] = [];
 	}
@@ -127,6 +128,8 @@ $(document).ready(function() {
 	}
 	$("#info_version").html(version);
 	$("#info_last-update").html(video[video.length - 1][video_idx.date]);
+	// get screen size
+	auto_display_max = Math.floor(5 * Math.pow(window.innerHeight / window.innerWidth, 1.41421356237));
 });
 
 $(function() {
@@ -329,138 +332,25 @@ $(function() {
 	{ // search
 		// search - input - autocomplete
 		$(document).on("input", "#input", function() {
-			var e = $("#input").val().toLowerCase();
-			if (e === "") {
-				$("#search_auto").html("");
-				return;
-			}
-			var auto_exact = [],
-				auto_other = [],
-				auto_exact_count = 0,
-				auto_other_count = 0;
-			// search for series name
-			for (var i in series_lookup) {
-				for (var j in series_lookup[i]) {
-					var f = series_lookup[i][j].indexOf(e);
-					if (f !== -1) {
-						// if string exist in series variations
-						auto_exact[auto_exact_count++] = i;
-						break;
-					}
-				}
-			}
-			// if input consist of only hiragana
-			if (!/[^\u3040-\u309F\u30FC\u30F4]/.test(e) && searching_song_name) {
-				// search for reading
-				// should search for index of 1st char -> 2nd then try to fill up auto_exact first but who cares about loading time anyway
-				for (var i = 1; i < song.length; ++i) {
-					var f = song[i][song_idx.reading].indexOf(e);
-					switch (f) {
-						case  0 : // found, from beginning
-							auto_exact[auto_exact_count++] = i;
-							break;
-						case -1 : // not found
-							break;
-						default : // found, not from beginning
-							auto_other[auto_other_count++] = i;
-							break;
-					}
-					if (auto_exact_count >= auto_display_max) {
-						break;
-					}
-				}
-			} else if (searching_song_name) {
-				// search for song name
-				for (var i = 1; i < song.length; ++i) {
-					var f = song[i][song_idx.name].toLowerCase().indexOf(e);
-					switch (f) {
-						case  0 : // found, from beginning
-							auto_exact[auto_exact_count++] = i;
-							break;
-						case -1 : // not found
-							break;
-						default : // found, not from beginning
-							auto_other[auto_other_count++] = i;
-							break;
-					}
-					if (auto_exact_count >= auto_display_max) {
-						break;
-					}
-				}
-			} else {
-				// search for artist
-				// not implemented for now, or maybe forever
-			}
-			// display
-			var auto_display_count = 0;
-			var new_html = "";
-			for (var i in auto_exact) {
-				// data being number (song id) or string (series name)
-				var auto_reading, auto_display, song_name;
-				if (isNaN(parseInt(auto_exact[i]))) {
-					// series name
-					auto_reading = " ";
-					auto_display = song_name = auto_exact[i];
-				} else {
-					// song reading
-					var space_index = song[auto_exact[i]][song_idx.reading].indexOf(" ");
-					var song_reading = song[auto_exact[i]][song_idx.reading];
-					// if song reading contains input
-					if (song_reading.indexOf(e) === -1) {
-						// nope
-						if (space_index === -1) {
-							auto_reading = song_reading;
-						} else {
-							auto_reading = song_reading.substring(0, space_index);
-						}
-					} else {
-						if (space_index === -1) {
-							auto_reading = "<b>" + e + "</b>" + song_reading.substring(e.length);
-						} else {
-							auto_reading = "<b>" + e + "</b>" + song_reading.substring(e.length, space_index);
-						}
-					}
-
-					// search in song name anyway
-					song_name = song[auto_exact[i]][song_idx.name];
-					if (song_name.toLowerCase().indexOf(e) === -1) {
-						// not found, do nothing
-						auto_display = song[auto_exact[i]][song_idx.name];
-					} else {
-						// highlight in song name
-						var f = song_name.toLowerCase().indexOf(e);
-						auto_display = (f === 0 ? "" : song_name.substring(e)) + "<b>" + song_name.substring(song_name.toLowerCase().indexOf(e), song_name.toLowerCase().indexOf(e) + e.length) + "</b>" + song_name.substring(f + e.length);
-					}
-				}
-				new_html += ("<div id=\"" + song_name + "\" class=\"auto_pannel\"><div class=\"auto_reading\">" + auto_reading + "</div><div class=\"auto_display\">" + auto_display + "</div></div>");
-				auto_display_count++;
-			}
-			for (var i in auto_other) {
-				var song_name = song[auto_other[i]][song_idx.name];
-				var found_position = song_name.toLowerCase().indexOf(e);
-				if (found_position === -1) {
-					new_html += ("<div id=\"" + song_name + "\" class=\"auto_pannel\"><div class=\"auto_reading\"></div><div class=\"auto_display\">" + song_name + "</div></div>");
-				} else {
-					new_html += ("<div id=\"" + song_name + "\" class=\"auto_pannel\"><div class=\"auto_reading\"></div><div class=\"auto_display\">" + song_name.substring(0, found_position) + "<b>" + song_name.substring(found_position, found_position + e.length) + "</b>" + song_name.substring(found_position + e.length) + "</div></div>");
-				}
-				
-				if (++auto_display_count >= auto_display_max) {
-					break;
-				}
-			}
-			$("#search_auto").html(new_html);
+			auto_search();
+		});
+		
+		// search - input - focus
+		$(document).on("focus", "#input", function() {
+			auto_search();
 		});
 
-		$(document).on("click", ".auto_pannel", function() {
+		// search - input - selection
+		$(document).on("mousedown", ".auto_panel", function() {
 			var e = $(this).attr("id");
-			// remove display
-			$("#search_auto").html("");
+			// set input
 			$("#input").val(e);
-			search();
+			// input on blur fires after this so no need to run search here
 		});
 
 		// search - input - submit
-		$(document).on("blur", "#input", function() {
+		$(document).on("blur", "#input", function(e) {
+			$("#search_auto").addClass("hidden");
 			search();
 		});
 		
@@ -579,6 +469,150 @@ $(function() {
 var hits = new Array();
 var hit_counter = 0;
 
+function auto_search() {
+	var e = $("#input").val().toLowerCase();
+	if (e === "") {
+		$("#search_auto").addClass("hidden");
+		return;
+	}
+	var auto_exact = [],
+		auto_other = [],
+		auto_exact_count = 0,
+		auto_other_count = 0;
+	// search for series name
+	for (var i in series_lookup) {
+		for (var j in series_lookup[i]) {
+			var f = series_lookup[i][j].indexOf(e);
+			if (f !== -1) {
+				// if string exist in series variations
+				auto_exact[auto_exact_count++] = i;
+				break;
+			}
+		}
+	}
+	// if input consist of only hiragana
+	if (!/[^\u3040-\u309F\u30FC\u30F4]/.test(e) && searching_song_name) {
+		// search for reading
+		// should search for index of 1st char -> 2nd then try to fill up auto_exact first but who cares about loading time anyway
+		for (var i = 1; i < song.length; ++i) {
+			// skip if same song name
+			if (i > 2 && song[i][song_idx.name].trim() === song[i - 1][song_idx.name].trim()) {
+				continue;
+			}
+			var f = song[i][song_idx.reading].indexOf(e);
+			switch (f) {
+				case  0 : // found, from beginning
+					if (entry_proc[i].length > 0) {
+						auto_exact[auto_exact_count++] = i;
+					}
+					break;
+				case -1 : // not found
+					break;
+				default : // found, not from beginning
+					if (entry_proc[i].length > 0) {
+						auto_other[auto_other_count++] = i;
+					}
+					break;
+			}
+			if (auto_exact_count >= auto_display_max) {
+				break;
+			}
+		}
+	} else if (searching_song_name) {
+		// search for song name
+		for (var i = 1; i < song.length; ++i) {
+			// skip if same song name
+			if (i > 2 && song[i][song_idx.name].trim() === song[i - 1][song_idx.name].trim()) {
+				continue;
+			}
+			var f = song[i][song_idx.name].toLowerCase().indexOf(e);
+			switch (f) {
+				case  0 : // found, from beginning
+					if (entry_proc[i].length > 0) {
+						auto_exact[auto_exact_count++] = i;
+					}
+					break;
+				case -1 : // not found
+					break;
+				default : // found, not from beginning
+					if (entry_proc[i].length > 0) {
+						auto_other[auto_other_count++] = i;
+					}
+					break;
+			}
+			if (auto_exact_count >= auto_display_max) {
+				break;
+			}
+		}
+	} else {
+		// search for artist
+		// not implemented for now, or maybe forever
+	}
+	// display
+	var auto_display_count = 0;
+	var new_html = "";
+	for (var i in auto_exact) {
+		// data being number (song id) or string (series name)
+		var auto_reading, auto_display, song_name;
+		if (isNaN(parseInt(auto_exact[i]))) {
+			// series name
+			auto_reading = " ";
+			auto_display = song_name = auto_exact[i];
+		} else {
+			// song reading
+			var space_index = song[auto_exact[i]][song_idx.reading].indexOf(" ");
+			var song_reading = song[auto_exact[i]][song_idx.reading];
+			// if song reading contains input
+			if (song_reading.indexOf(e) === -1) {
+				// nope
+				if (space_index === -1) {
+					auto_reading = song_reading;
+				} else {
+					auto_reading = song_reading.substring(0, space_index);
+				}
+			} else {
+				if (space_index === -1) {
+					auto_reading = "<b>" + e + "</b>" + song_reading.substring(e.length);
+				} else {
+					auto_reading = "<b>" + e + "</b>" + song_reading.substring(e.length, space_index);
+				}
+			}
+
+			// search in song name anyway
+			song_name = song[auto_exact[i]][song_idx.name];
+			if (song_name.toLowerCase().indexOf(e) === -1) {
+				// not found, do nothing
+				auto_display = song[auto_exact[i]][song_idx.name];
+			} else {
+				// highlight in song name
+				var f = song_name.toLowerCase().indexOf(e);
+				auto_display = (f === 0 ? "" : song_name.substring(e)) + "<b>" + song_name.substring(song_name.toLowerCase().indexOf(e), song_name.toLowerCase().indexOf(e) + e.length) + "</b>" + song_name.substring(f + e.length);
+			}
+		}
+		new_html += ("<div id=\"" + song_name + "\" class=\"auto_panel" + (auto_display_count === 0 ? " auto_first" : "") + "\"><div class=\"auto_reading\">" + auto_reading + "</div><div class=\"auto_display\">" + auto_display + "</div></div>");
+		auto_display_count++;
+	}
+	for (var i in auto_other) {
+		var song_name = song[auto_other[i]][song_idx.name];
+		var found_position = song_name.toLowerCase().indexOf(e);
+		if (found_position === -1) {
+			new_html += ("<div id=\"" + song_name + "\" class=\"auto_panel\"><div class=\"auto_reading\"></div><div class=\"auto_display\">" + song_name + "</div></div>");
+		} else {
+			new_html += ("<div id=\"" + song_name + "\" class=\"auto_panel" + (auto_display_count === 0 ? " auto_first" : "") + "\"><div class=\"auto_reading\"></div><div class=\"auto_display\">" + song_name.substring(0, found_position) + "<b>" + song_name.substring(found_position, found_position + e.length) + "</b>" + song_name.substring(found_position + e.length) + "</div></div>");
+		}
+		
+		if (++auto_display_count >= auto_display_max) {
+			break;
+		}
+	}
+	$("#search_auto").html(new_html);
+	if (new_html !== "") {
+		$("#search_auto").removeClass("hidden");
+	} else {
+		$("#search_auto").addClass("hidden");
+	}
+}
+
 function search() {
 	var e = $("#input").val();
 	if (e === loading) {
@@ -664,8 +698,7 @@ function search() {
 }
 
 function update_display() {
-	$("#search_display").html("");
-	$("#search_auto").html("");
+	$("#search_auto").addClass("hidden");
 	var current_song = -1;
 	var sel_member = 7;
 	for (var i in singer_chosen) {

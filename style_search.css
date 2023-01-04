@@ -1,9 +1,9 @@
 /* nav plug-in */
 #nav_search_random {
-	padding: max(1vw, 8px) max(2vw, 16px) max(1vw, 8px) max(1vw, 8px);
+	padding: 1vw 2vw 1vw 1vw;
 	content : url("icon/random.png");
-	width : max(8vw, 64px);
-	height : max(8vw, 64px);
+	width : 8vw;
+	height : 8vw;
 }
 
 #nav_search_random.disabled {
@@ -134,7 +134,7 @@
 	border-radius : 1.2vw;
 	position : sticky;
 	position : -webkit-sticky;
-	top : max(10vw, 80px);
+	top : 10vw;
 }
 
 .song_name_container.odd_colour {
@@ -399,15 +399,26 @@
 /* search autocomplete section */
 #search_auto {
 	position : absolute;
-	left : 0;
+	left : 3vw;
 	top : 22vw;
+	border : 1vw solid GhostWhite;
+	background-color : LightGreen;
 }
 
-.auto_pannel {
-	background-color : LightGrey;
+.auto_panel {
 	height : 12vw;
 	width : 80vw;
-	margin-left : 4vw;
+	overflow : hidden;
+	white-space : nowrap;
+}
+
+.auto_panel:not(.auto_first) {
+	border-top : 0.5vw solid GhostWhite;
+}
+
+/* like i know theres aint no hover on a damn mobile site */
+.auto_panel:hover {
+	background-color : MediumSeaGreen;
 }
 
 .auto_reading {

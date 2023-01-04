@@ -58,7 +58,7 @@ a {
 	position: fixed; /* Set the navbar to fixed position */
 	top: 0; /* Position the navbar at the top of the page */
 	width: 100%; /* Full width */
-	height : max(10vw, 80px);
+	height : 10vw;
 	z-index : 2;
 }
 
@@ -69,24 +69,24 @@ a {
 }
 
 #nav_menu:not(.menu_opened) {
-	padding: max(1vw, 8px) max(1vw, 8px) max(1vw, 8px) max(2vw, 16px);
+	padding: 1vw 1vw 1vw 2vw;
 	content : url("icon/menu.png");
-	width : max(8vw, 64px);
-	height : max(8vw, 64px);
+	width : 8vw;
+	height : 8vw;
 }
 
 #nav_menu.menu_opened {
-	padding: max(1vw, 8px) max(1vw, 8px) max(1vw, 8px) max(2vw, 16px);
+	padding: 1vw 1vw 1vw 2vw;
 	content : url("icon/cross.png");
-	width : max(8vw, 64px);
-	height : max(8vw, 64px);
+	width : 8vw;
+	height : 8vw;
 }
 
 #nav_setting {
-	padding: max(1vw, 8px) max(2vw, 16px) max(1vw, 8px) max(1vw, 8px);
+	padding: 1vw 2vw 1vw 1vw;
 	content : url("icon/setting.png");
-	width : max(8vw, 64px);
-	height : max(8vw, 64px);
+	width : 8vw;
+	height : 8vw;
 }
 
 #nav_title {
@@ -106,14 +106,14 @@ a {
 }
 
 #nav_to_top {
-	padding: max(1vw, 8px) max(2vw, 16px) max(1vw, 8px) max(1vw, 8px);
+	padding: 1vw 2vw 1vw 1vw;
 	content : url("icon/to_top.png");
-	width : max(8vw, 64px);
-	height : max(8vw, 64px);
+	width : 8vw;
+	height : 8vw;
 }
 
 #search_section {
-	margin-top : max(10vw, 80px);
+	margin-top : 10vw;
 }
 /* overall section ~end~ */
 
@@ -121,13 +121,13 @@ a {
 #menu_container {
 	position : fixed;
 	left : 0;
-	top : max(10vw, 80px);
-	height : calc(100% - max(10vw, 80px));
+	top : 10vw;
+	height : calc(100% - 10vw);
 	width : 100%;
 	background : rgba(30, 30, 30, 0.5);
 }
 
-#menu_pannel {
+#menu_panel {
 	left : 0;
 	height : 100%;
 	width : 75vw;
@@ -196,7 +196,7 @@ a {
 	position : fixed;
 	left : 0;
 	top : max(10vw, 80px);
-	height : calc(100% - max(10vw, 80px));
+	height : calc(100% - 10vw);
 	width : 100%;
 }
 
