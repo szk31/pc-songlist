@@ -42,7 +42,7 @@ var series_lookup = {
 	"マクロス" : ["マクロス", "まくろす"],
 	"ラブライブ" : ["ラブライブ", "らぶらいぶ", "LL", "ll"],
 	"物語シリーズ" : ["物語シリーズ", "ものがたりしりーず", "ものがたりシリーズ"],
-	"まどまぎ" : ["まどまぎ", "まどマギ", "まどか"],
+	"まどマギ" : ["まどマギ", "まどまぎ", "まどか"],
 	"アイマス" : ["アイマス", "あいます", "デレマス", "でれます"],
 	"洋楽" : ["洋楽"],
 	"Disney" : ["Disney", "ディズニー", "でぃずにー"],
@@ -68,7 +68,7 @@ var video_idx = {
 	date : 1
 };
 
-var version = "2023-01-05-1";
+var version = "2023-01-05-2";
 
 /* control / memories */
 // stores whats currently looking up
@@ -349,7 +349,7 @@ $(function() {
 		});
 
 		// search - input - submit
-		$(document).on("blur", "#input", function(e) {
+		$(document).on("blur", "#input", function() {
 			$("#search_auto").addClass("hidden");
 			search();
 		});
@@ -556,50 +556,25 @@ function auto_search() {
 		var auto_reading, auto_display, song_name;
 		if (isNaN(parseInt(auto_exact[i]))) {
 			// series name
-			auto_reading = " ";
+			auto_reading = "";
 			auto_display = song_name = auto_exact[i];
 		} else {
 			// song reading
-			var space_index = song[auto_exact[i]][song_idx.reading].indexOf(" ");
 			var song_reading = song[auto_exact[i]][song_idx.reading];
-			// if song reading contains input
-			if (song_reading.indexOf(e) === -1) {
-				// nope
-				if (space_index === -1) {
-					auto_reading = song_reading;
-				} else {
-					auto_reading = song_reading.substring(0, space_index);
-				}
+			if (song_reading.indexOf(" ") === -1) {
+				auto_reading = bold(song_reading, e)
 			} else {
-				if (space_index === -1) {
-					auto_reading = "<b>" + e + "</b>" + song_reading.substring(e.length);
-				} else {
-					auto_reading = "<b>" + e + "</b>" + song_reading.substring(e.length, space_index);
-				}
+				auto_reading = bold(song_reading.substring(0, song_reading.indexOf(" ")), e);
 			}
-
-			// search in song name anyway
+			// song name
 			song_name = song[auto_exact[i]][song_idx.name];
-			if (song_name.toLowerCase().indexOf(e) === -1) {
-				// not found, do nothing
-				auto_display = song[auto_exact[i]][song_idx.name];
-			} else {
-				// highlight in song name
-				var f = song_name.toLowerCase().indexOf(e);
-				auto_display = (f === 0 ? "" : song_name.substring(e)) + "<b>" + song_name.substring(song_name.toLowerCase().indexOf(e), song_name.toLowerCase().indexOf(e) + e.length) + "</b>" + song_name.substring(f + e.length);
-			}
+			auto_display = bold(song_name, e);
 		}
 		new_html += ("<div id=\"" + song_name + "\" class=\"auto_panel" + (auto_display_count === 0 ? " auto_first" : "") + "\"><div class=\"auto_reading\">" + auto_reading + "</div><div class=\"auto_display\">" + auto_display + "</div></div>");
 		auto_display_count++;
 	}
 	for (var i in auto_other) {
-		var song_name = song[auto_other[i]][song_idx.name];
-		var found_position = song_name.toLowerCase().indexOf(e);
-		if (found_position === -1) {
-			new_html += ("<div id=\"" + song_name + "\" class=\"auto_panel\"><div class=\"auto_reading\"></div><div class=\"auto_display\">" + song_name + "</div></div>");
-		} else {
-			new_html += ("<div id=\"" + song_name + "\" class=\"auto_panel" + (auto_display_count === 0 ? " auto_first" : "") + "\"><div class=\"auto_reading\"></div><div class=\"auto_display\">" + song_name.substring(0, found_position) + "<b>" + song_name.substring(found_position, found_position + e.length) + "</b>" + song_name.substring(found_position + e.length) + "</div></div>");
-		}
+		new_html += ("<div id=\"" + song[auto_other[i]][song_idx.name] + "\" class=\"auto_panel" + (auto_display_count === 0 ? " auto_first" : "") + "\"><div class=\"auto_reading\"></div><div class=\"auto_display\">" + bold(song[auto_other[i]][song_idx.name], e) + "</div></div>");
 		
 		if (++auto_display_count >= auto_display_max) {
 			break;
@@ -800,6 +775,15 @@ function fill_digit(input, target_length) {
 
 function is_private(index) {
 	return entry[index][entry_idx.note].includes("非公開") || entry[index][entry_idx.note].includes("記録用") || entry[index][entry_idx.note].includes("アーカイブなし");
+}
+
+function bold(org, selc) {
+	var e = org.toLowerCase().indexOf(selc.toLowerCase());
+	if (e === -1 || selc === "") {
+		return org;
+	} else {
+		return (org.substring(0, e) + "<b>" + org.substring(e, e + selc.length) + "</b>" + org.substring(e + selc.length));
+	}
 }
 
 /*
