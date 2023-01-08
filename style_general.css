@@ -1,5 +1,3 @@
-/* using vw to px ratio 1 : 8 */
-
 /* overall section ~start~ */
 @font-face {
 	font-family : MPLUS1p;
@@ -243,7 +241,6 @@ a {
 
 /* setting section */
 #setting {
-	top : 0;
 	position : absolute;
 	width : 100%;
 	height : 100%;
@@ -252,9 +249,8 @@ a {
 
 #setting_defog {
 	position : absolute;
-	left : 50%;
-	top : 50%;
-	transform: translate(-50%, -50%);
+	left : 15vw;
+	top : 20vw;
 	width : 70vw;
 	height : 60vh;
 	background-color : MediumPurple;
@@ -263,15 +259,25 @@ a {
 	text-align : center;
 	border: none;
 	border-radius: 2vw;
+	overflow-y : auto;
 }
 
-#setting_display-private {
-	justify-content: center;
+#setting_defog::-webkit-scrollbar-track {
+	background-color : rgba(0, 0, 0, 0);
+}
+
+#setting_defog::-webkit-scrollbar {
+	width : 4vw;
+}
+
+#setting_defog::-webkit-scrollbar-thumb {
+	background-color : #C6BED8;
+	border-radius: 2vw;
+	border : 1vw solid MediumPurple;
 }
 
 #setting_button_container {
 	position : absolute;
-	bottom : 3vh;
 	width : 100%;
 	left : 50%;
 	transform: translate(-50%, 0);
@@ -286,11 +292,32 @@ a {
 	font-weight : bold;
 }
 
+#setting_max-display {
+	height : 10vw;
+}
+
+.setting_input {
+	height : 5vw;
+	width : 10vw;
+	font-size : 4.2vw;
+	padding : 0.5vw 1.2vw;
+	border-radius: 1.6vw;
+	border : none;
+	text-align : center;
+}
+
 #setting_singer_display {
 	position: absolute;
-	top : 44.4vw;
-	left : 49vw;
+	top : 54.4vw;
 	font-size : 3vw;
+}
+
+#setting_singer_display:not(.scrollbar_present) {
+	left : 49vw;
+}
+
+#setting_singer_display.scrollbar_present {
+	left : 47vw;
 }
 
 /* slider switch from w3 school */

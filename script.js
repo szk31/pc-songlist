@@ -68,7 +68,7 @@ var video_idx = {
 	date : 1
 };
 
-var version = "2023-01-05-2";
+var version = "2023-01-09-1";
 
 /* control / memories */
 // stores whats currently looking up
@@ -245,6 +245,11 @@ $(function() {
 			$("#menu_container").addClass("hidden");
 			$("#nav_menu").removeClass("menu_opened");
 			prevent_menu_popup = true;
+			// change name<->icon position according to if scrollbar is present
+			// this thing doesnt really work but also very not likely to be even triggered so anyways
+			if ($("#setting_defog").get(0).scrollHeight > $("#setting_defog").height()) {
+				$("#setting_singer_display").addClass("scrollbar_present");
+			}
 		});
 	}
 
@@ -259,6 +264,21 @@ $(function() {
 	});
 	
 	{ // setting
+		// setting - 0 : display maximum
+		$(document).on("input", "#setting_max-display_value", function() {
+			var e = $("#setting_max-display_value").val();
+			if (e === "") {
+				// nothing, wait for input
+				return;
+			}
+			// remove anything thats not 0~9
+			e = e.replace(/[^\d]/g, "");
+			
+			// check min max
+			e = Math.min(400, Math.max(1, parseInt(e)));
+			$("#setting_max-display_value").val(e);
+		});
+		
 		// setting - 1 : do diplay hidden switch update
 		$(document).on("change", "#setting_display-private_checkbox", function(e) {
 			do_display_hidden = e.target.checked;
@@ -292,7 +312,7 @@ $(function() {
 			do_random_anyway = false;
 			
 			// update display
-			$("#setting_max-display_value").html(max_display);
+			$("#setting_max-display_value").val(max_display);
 			$("#setting_display-private_checkbox").prop("checked", do_display_hidden);
 			$("#setting_reset-input_checkbox").prop("checked", do_clear_input);
 			$("#setting_singer_checkbox").prop("checked", use_singer_icon);
@@ -308,6 +328,8 @@ $(function() {
 			$("#popup_container").addClass("hidden");
 			$(document.body).removeClass("no_scroll");
 			prevent_menu_popup = false;
+			// assign values (those are not changed on edit)
+			max_display = parseInt($("#setting_max-display_value").val());
 			if (use_singer_icon) {
 				$(".singer_container").addClass("hidden");
 				$(".singer_icon_container").removeClass("hidden");
@@ -335,12 +357,12 @@ $(function() {
 			auto_search();
 		});
 		
-		// search - input - focus
+		// search - input::focus
 		$(document).on("focus", "#input", function() {
 			auto_search();
 		});
 
-		// search - input - selection
+		// search - input - autocomplete - selection
 		$(document).on("mousedown", ".auto_panel", function() {
 			var e = $(this).attr("id");
 			// set input
@@ -490,7 +512,7 @@ function auto_search() {
 			}
 		}
 	}
-	// if input consist of only hiragana
+	// if input consist of only hiragana, "ー" or "ヴ"
 	if (!/[^\u3040-\u309F\u30FC\u30F4]/.test(e) && searching_song_name) {
 		// search for reading
 		// should search for index of 1st char -> 2nd then try to fill up auto_exact first but who cares about loading time anyway
