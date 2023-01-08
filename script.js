@@ -68,7 +68,7 @@ var video_idx = {
 	date : 1
 };
 
-var version = "2023-01-09-3";
+var version = "2023-01-09-4";
 
 /* control / memories */
 // stores whats currently looking up
@@ -281,6 +281,13 @@ $(function() {
 			e = Math.min(400, Math.max(1, parseInt(e)));
 			$("#setting_max-display_value").val(e);
 		});
+		
+		// setting - 0 - blur input
+		$(document).on("keydown", function(e) {
+			if (e.keyCode === 13) {
+				$("#setting_max-display_value").blur();
+			}
+		})
 		
 		// setting - 1 : do diplay hidden switch update
 		$(document).on("change", "#setting_display-private_checkbox", function(e) {
