@@ -68,7 +68,7 @@ var video_idx = {
 	date : 1
 };
 
-var version = "2023-01-09-2";
+var version = "2023-01-09-3";
 
 /* control / memories */
 // stores whats currently looking up
@@ -267,12 +267,15 @@ $(function() {
 		// setting - 0 : display maximum
 		$(document).on("input", "#setting_max-display_value", function() {
 			var e = $("#setting_max-display_value").val();
-			if (e === "") {
-				// nothing, wait for input
-				return;
-			}
+			
 			// remove anything thats not 0~9
 			e = e.replace(/[^\d]/g, "");
+			
+			// check if e is blank (after replace)
+			if (e === "") {
+				$("#setting_max-display_value").val(e);
+				return;
+			}
 			
 			// check min max
 			e = Math.min(400, Math.max(1, parseInt(e)));
