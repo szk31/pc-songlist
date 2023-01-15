@@ -85,7 +85,7 @@ var attr_idx = [
 	"キャラソン"
 ];
 
-var version = "2023-01-15-1";
+var version = "2023-01-15-2";
 
 /* control / memories */
 // stores whats currently looking up
