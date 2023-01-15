@@ -103,13 +103,22 @@ a {
 }
 
 #nav_control_group {
+	display : grid;
 	grid-column : 3;
 	grid-row : 1;
 	width : 25vw;
 	text-align : right;
 }
 
+#nav_search_random ,#nav_share_rep {
+	grid-column : 1;
+	grid-row : 1;
+	
+}
+
 #nav_to_top {
+	grid-column : 2;
+	grid-row : 1;
 	padding: 1vw 2vw 1vw 1vw;
 	content : url("icon/to_top.png");
 	width : 8vw;
@@ -370,7 +379,7 @@ input:checked + .slider {
 }
 
 input:focus + .slider {
-	box-shadow: 0 0 1px #2196F3;
+	/*box-shadow: 0 0 1px #2196F3;*/
 }
 
 input:checked + .slider:before {

@@ -85,7 +85,7 @@ var attr_idx = [
 	"キャラソン"
 ];
 
-var version = "2023-01-15-3";
+var version = "2023-01-15-4";
 
 /* control / memories */
 // stores whats currently looking up
@@ -918,7 +918,7 @@ $(function() {
 			// ignore character limit and tweet anyway
 			var tweet = "";
 			for (var i in rep_selected) {
-				tweet += (song[rep_selected[i]][song_idx.name] + (display_artist ? (" / " + song[rep_selected[i]][song_idx.artist]) : "") + "\n");
+				tweet += (song[rep_selected[i]][song_idx.name] + ($("#list_artist_cb").hasClass("selected") ? (" / " + song[rep_selected[i]][song_idx.artist]) : "") + "\n");
 			}
 			window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweet), "_blank");
 		});
