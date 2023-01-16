@@ -213,6 +213,26 @@
 	color : Snow;
 }
 
+.rep_list_title_container {
+	display : grid;
+	grid-template-columns: 30% 40% 30%;
+	
+}
+
+.rep_list_delete_container {
+	position : relative;
+}
+
+.rep_list_delete {
+	position : absolute;
+	content : url("icon/trash.png");
+	width : 4.8vw;
+	height : 4.8vw;
+	left : 0;
+	bottom : 0;
+	margin-left : 2.4vw;
+}
+
 #rep_list_container.editing {
 	display : grid;
 	grid-template-columns: 8vw auto;

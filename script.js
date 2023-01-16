@@ -85,7 +85,7 @@ var attr_idx = [
 	"キャラソン"
 ];
 
-var version = "2023-01-15-4";
+var version = "2023-01-16-1";
 
 /* control / memories */
 // stores whats currently looking up
@@ -313,6 +313,7 @@ $(function() {
 						$("#nav_share_rep").removeClass("hidden");
 						$("#nav_title").html("レパートリー");
 						// do whatever needed
+						$(window).scrollTop(0);
 						rep_search();
 						break;
 				}
@@ -810,6 +811,10 @@ $(function() {
 		
 		// display - edit - toggle
 		$(document).on("click", "#rep_list_edit", function() {
+			// if back from deleting the last song
+			if (rep_selected.length === 0) {
+				return;
+			}
 			// if in edit mode
 			if (rep_edit_selected === -1) {
 				// not in edit mode
@@ -831,7 +836,6 @@ $(function() {
 				$("#rep_list_leftbar").addClass("hidden");
 				$("#rep_list_container").removeClass("editing");
 				rep_edit_selected = -1;
-				
 			}
 		});
 		
@@ -843,52 +847,70 @@ $(function() {
 					return;
 					break;
 				case -2 : // no item selected
-					console.log("enter");
 					rep_edit_selected = e;
-					// show delete icon
-					
 					// change button
 					rep_update_leftbar();
 					break;
 				case e : // current selected
-					console.log("leave");
 					rep_edit_selected = -2;
-					// hide delete icon
-					
 					// reset button
 					rep_update_leftbar();
 					break;
 				default : // others
 					if ($(this).hasClass("arrow_up")) {
-						console.log("up");
 						[rep_selected[e], rep_selected[e + 1]] = [rep_selected[e + 1], rep_selected[e]];
 						rep_edit_selected--;
 						rep_update_list();
 						rep_update_leftbar();
 						// check for off-screen element
 						var target_id = Math.max(0, rep_edit_selected - 1);
-						console.log(target_id, $("#rep_btn_" + target_id).offset().top, $("#rep_list_leftbar").scrollTop(), $("#rep_btn_" + target_id).offsetParent().offset().top);
-						var div_top = document.getElementById("rep_list_leftbar").offsetTop,
-						   node_top = document.getElementById("rep_btn_" + target_id).offsetTop;
-						
+						var div_top = $("#rep_list_leftbar").offset().top,
+						   node_top = $("#rep_btn_" + target_id).offset().top;
+						if (node_top < div_top) {
+							$("#rep_list_leftbar").scrollTop($("#rep_list_leftbar").scrollTop() - div_top + node_top);
+							$("#rep_list_content").scrollTop($("#rep_list_leftbar").scrollTop());
+						}
 					}
 					if ($(this).hasClass("arrow_down")) {
-						console.log("down");
 						[rep_selected[e - 1], rep_selected[e]] = [rep_selected[e], rep_selected[e - 1]];
 						rep_edit_selected++;
 						rep_update_list();
 						rep_update_leftbar();
 						// check for off-screen element
 						var target_id = Math.min(rep_edit_selected + 1, rep_selected.length - 1);
-						var div_btm = document.getElementById("rep_list_leftbar").offsetBottom,
-						   node_btm = document.getElementById("rep_btn_" + target_id).offsetBottom;
+						var div_btm = $("#rep_list_leftbar").offset().top + $("#rep_list_leftbar").height(),
+						   node_btm = $("#rep_btn_" + target_id).offset().top + $("#rep_btn_" + target_id).height();
 						if (node_btm > div_btm) {
-							$("#rep_btn_" + target_id).scrollBottom(div_btm);
+							$("#rep_list_leftbar").scrollTop($("#rep_list_leftbar").scrollTop() - div_btm + node_btm);
+							$("#rep_list_content").scrollTop($("#rep_list_leftbar").scrollTop());
 						}
 					}
 					break;
 			}
 		});
+		
+		// display - edit - delete
+		$(document).on("click", ".rep_list_delete", function() {
+			if (rep_edit_selected >= 0) {
+				// remove selected class from display
+				$("#rep_song_" + rep_selected[rep_edit_selected]).removeClass("selected");
+				rep_selected.splice(rep_edit_selected, 1);
+			}
+			rep_edit_selected = -2;
+			rep_update_list();
+			rep_update_leftbar();
+			if (rep_selected.length === 0) {
+				// quit edit mode
+				$("#rep_list_edit").html("編集");
+				$("#rep_list_artist").removeClass("disabled");
+				$("#rep_list_close").removeClass("disabled");
+				$("#rep_compose_tweet").removeClass("disabled");
+				$("#rep_list_leftbar").addClass("hidden");
+				$("#rep_list_container").removeClass("editing");
+				rep_edit_selected = -1;
+				$("#nav_share_rep").addClass("disabled");
+			}
+		})
 		
 		// display - edit - sync scroll
 		$("#rep_list_content").on("scroll", function() {
@@ -909,6 +931,9 @@ $(function() {
 		// display - tweet
 		$(document).on("click", "#rep_compose_tweet", function() {
 			if ($("#rep_compose_tweet").hasClass("disabled")) {
+				return;
+			}
+			if (rep_selected.length === 0) {
 				return;
 			}
 			prevent_menu_popup = false;
@@ -1400,6 +1425,7 @@ function rep_update_list() {
 function rep_update_leftbar() {
 	// reset
 	$(".rep_list_item").attr("class", "rep_list_item");
+		$(".rep_list_delete").addClass("hidden");
 	if (rep_edit_selected >= 0) {
 		// hiden everything
 		$(".rep_list_item").addClass("blank");
@@ -1412,6 +1438,8 @@ function rep_update_leftbar() {
 		if (rep_edit_selected < rep_hits.length - 1) {
 			$("#rep_btn_" + (rep_edit_selected + 1)).attr("class", "rep_list_item arrow_down");
 		}
+		// display delete button
+		$(".rep_list_delete").removeClass("hidden");
 	}
 
 }
@@ -1503,7 +1531,7 @@ function get_attr(id) {
 
 /*
  * to do
- * search bt attr mode
+ * search by attr mode
  * editing request list
  * copy to clip board
  * copied to clipboard message pop up
