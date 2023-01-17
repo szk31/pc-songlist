@@ -85,7 +85,7 @@ var attr_idx = [
 	"キャラソン"
 ];
 
-var version = "2023-01-17-1";
+var version = "2023-01-17-2";
 
 /* control / memories */
 // stores whats currently looking up
@@ -1416,10 +1416,18 @@ function rep_update_list() {
 	// list part
 	new_html = "";
 	var display_artist = $("#list_artist_cb").hasClass("selected");
+	var tweet_length = 0;
 	for (var i = 0; i < rep_selected.length; ++i) {
-		new_html += ("<div id=\"list_" + i + "\">" + song[rep_selected[i]][song_idx.name] + (display_artist ? (" / " + song[rep_selected[i]][song_idx.artist]) : "") + "</div>");
+		var display_string = song[rep_selected[i]][song_idx.name] + (display_artist ? (" / " + song[rep_selected[i]][song_idx.artist]) : "");
+		new_html += ("<div id=\"list_" + i + "\">" + display_string + "</div>");
+		for (var j in display_string) {
+			tweet_length += /[ -~]/.test(display_string[j]) ? 1 : 2;
+		}
+		tweet_length++;
 	}
 	$("#rep_list_content").html(new_html);
+	$(".rep_list_wordcount").html("長さ<br />" + tweet_length + "/280");
+	$(".rep_list_wordcount").toggleClass("red_text", tweet_length > 280);
 }
 
 function rep_update_leftbar() {

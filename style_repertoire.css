@@ -233,6 +233,18 @@
 	margin-left : 2.4vw;
 }
 
+.rep_list_wc_container {
+	position : relative;
+}
+
+.rep_list_wordcount {
+	position : absolute;
+	bottom : 0;
+	right : 4vw;
+	font-size : 4vw;
+	font-weight : bold;
+}
+
 #rep_list_container.editing {
 	display : grid;
 	grid-template-columns: 8vw auto;

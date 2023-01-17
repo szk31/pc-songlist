@@ -54,6 +54,12 @@ a {
 	opacity : 0;
 }
 
+.red_text {
+	color : Red !important;
+	-webkit-text-stroke : 0.144vw White;
+	text-stroke : 0.144vw White;
+}
+
 /* The navigation bar */
 #navbar {
 	display : grid;
