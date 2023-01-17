@@ -203,7 +203,7 @@
 	left : 4vw;
 	top : 6vh;
 	width : 92vw;
-	height : 84vh;
+	height : 72vh;
 	background-color : MediumPurple;
 	font-size : 4vw;
 	border: none;
@@ -240,7 +240,7 @@
 
 #rep_list_leftbar {
 	padding : 2vw;
-	height : 60vh;
+	height : 50vh;
 	overflow : hidden;
 }
 
@@ -270,7 +270,7 @@
 	border : none;
 	margin : 0vw 2vw;
 	padding : 2vw;
-	height : 60vh;
+	height : 50vh;
 	white-space : nowrap;
 }
 

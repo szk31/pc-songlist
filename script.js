@@ -85,7 +85,7 @@ var attr_idx = [
 	"キャラソン"
 ];
 
-var version = "2023-01-16-1";
+var version = "2023-01-17-1";
 
 /* control / memories */
 // stores whats currently looking up
@@ -910,7 +910,7 @@ $(function() {
 				rep_edit_selected = -1;
 				$("#nav_share_rep").addClass("disabled");
 			}
-		})
+		});
 		
 		// display - edit - sync scroll
 		$("#rep_list_content").on("scroll", function() {
