@@ -237,167 +237,100 @@
 
 
 /* singer colour palette section */
-/* kirara (4) cc : 5.14 */
-.singer_4 {
-	background-color : LightCoral;
-	border-color : #670000;
+/* nia (1) cc : 11.86 */
+.singer_1 {
+	background-color : PaleTurquoise;
+	color : DarkBlue;
 }
-.singer_4>a {
-	color : #670000 !important;
-}
-.singer_4m {
-	background-color : #670000;
-	border-color : LightCoral;
-}
-.singer_4m>a {
-	color : LightCoral !important;
+.singer_1m {
+	background-color : DarkBlue;
+	color : PaleTurquoise;
 }
 /* momo (2) cc : 5.14 */
 .singer_2 {
 	background-color : LightPink;
-	border-color : DarkMagenta;
-}
-.singer_2>a {
-	color : DarkMagenta !important;
+	color : DarkMagenta;
 }
 .singer_2m {
 	background-color : DarkMagenta;
-	border-color : LightPink;
-}
-.singer_2m>a {
-	color : LightPink !important;
-}
-/* nia (1) cc : 11.86 */
-.singer_1 {
-	background-color : PaleTurquoise;
-	border-color : DarkBlue;
-}
-.singer_1>a {
-	color : DarkBlue !important;
-}
-.singer_1m {
-	background-color : DarkBlue;
-	border-color : PaleTurquoise;
-}
-.singer_1m>a {
-	color : PaleTurquoise !important;
-}
-
-/* momokira (6) cc : 5.57 */
-.singer_6 {
-	background-color : #D98EED;
-	border-color : Indigo;
-}
-.singer_6>a {
-	color : Indigo !important;
-}
-/* kirania (5) cc : 5.39 */
-.singer_5 {
-	background-color : #991D1D;
-	border-color : LightBlue;
-}
-.singer_5>a {
-	color : LightBlue !important;
+	color : LightPink;
 }
 /* momonia (3) cc : 5.56 */
 .singer_3 {
 	background-color : LightBlue;
-	border-color : DarkMagenta;
+	color : DarkMagenta;
 }
-.singer_3>a {
-	color : DarkMagenta !important;
+/* kirara (4) cc : 5.14 */
+.singer_4 {
+	background-color : LightCoral;
+	color : #670000;
 }
-
+.singer_4m {
+	background-color : #670000;
+	color : LightCoral;
+}
+/* kirania (5) cc : 5.39 */
+.singer_5 {
+	background-color : #991D1D;
+	color : LightBlue;
+}
+/* momokira (6) cc : 5.57 */
+.singer_6 {
+	background-color : #D98EED;
+	color : Indigo;
+}
 /* petitcoco (7) cc : 6.55 */
 .singer_7 {
 	background-color : #6E24B7;
-	border-color : #E0E7FF;
-}
-.singer_7>a {
-	color : #E0E7FF !important;
+	color : #E0E7FF;
 }
 
 /* yuco (9) cc : 7.52 */
 .singer_9 {
 	background-color : #FFC0F9;
-	border-color : MediumBlue;
-}
-.singer_9>a {
-	color : MediumBlue !important;
+	color : MediumBlue;
 }
 .singer_9m {
 	background-color : MediumBlue;
-	border-color : #FFC0F9;
+	color : #FFC0F9;
 }
-.singer_9m>a {
-	color : #FFC0F9 !important;
-}
-/* shiro (10) cc : N/A */
-/* colours are placeholders */
+/* shiro (10) cc : 4.63 */
 .singer_10 {
-	background-color : aaaaaa;
-	border-color : bbbbbb;
-}
-.singer_10>a {
-	color : bbbbbb !important;
+	background-color : #FFF0AB;
+	color : #CC2455;
 }
 .singer_10m {
-	background-color : bbbbbb;
-	border-color : aaaaaa;
-}
-.singer_10m>a {
-	color : aaaaaa !important;
+	background-color : #CC2455;
+	color : #FFF0AB;
 }
 /* reserved (11) cc : N/A */
-/* colours are placeholders */
 .singer_11 {
 	background-color : aaaaaa;
-	border-color : bbbbbb;
+	color : bbbbbb;
 }
-.singer_11>a {
-	color : bbbbbb !important;
-}
-/* chui (12) cc : 4.76 */
+/* chui (12) cc : 5.17 */
 .singer_12 {
-	background-color : Gold;
-	border-color : FireBrick;
-}
-.singer_12>a {
-	color : FireBrick !important;
+	background-color : #C4E2FA;
+	color : #814B41;
 }
 .singer_12m {
-	background-color : FireBrick;
-	border-color : Gold;
-}
-.singer_12m>a {
-	color : Gold !important;
+	background-color : #814B41;
+	color : #C4E2FA;
 }
 /* reserved (13) cc : N/A */
-/* colours are placeholders */
 .singer_13 {
 	background-color : aaaaaa;
-	border-color : bbbbbb;
-}
-.singer_13>a {
-	color : bbbbbb !important;
+	color : bbbbbb;
 }
 /* reserved (14) cc : N/A */
-/* colours are placeholders */
 .singer_14 {
 	background-color : aaaaaa;
-	border-color : bbbbbb;
-}
-.singer_14>a {
-	color : bbbbbb !important;
+	color : bbbbbb;
 }
 /* reserved (15) cc : N/A */
-/* colours are placeholders */
 .singer_15 {
 	background-color : aaaaaa;
-	border-color : bbbbbb;
-}
-.singer_15>a {
-	color : bbbbbb !important;
+	color : bbbbbb;
 }
 
 /* search autocomplete section */

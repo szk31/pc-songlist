@@ -203,7 +203,7 @@
 	left : 4vw;
 	top : 6vh;
 	width : 92vw;
-	height : 72vh;
+	height : auto;
 	background-color : MediumPurple;
 	font-size : 4vw;
 	border: none;

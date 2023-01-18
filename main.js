@@ -68,7 +68,7 @@ var video_idx = {
 	date : 1
 };
 
-var version = "2023-01-17-4";
+var version = "1.0.0";
 
 /* control / memories */
 
@@ -99,37 +99,30 @@ var do_random_anyway = false;
 var entry_proc = [];
 
 $(document).ready(function() {
-	$("#input").val("");
-	// process data
-	for (var i in song) {
-		entry_proc[i] = [];
-	}
-	for (var i = 0; i < entry.length; ++i) {
-		entry_proc[entry[i][0]].push(i);
-	}
-	$("#info_version").html(version);
-	$("#info_last-update").html(video[video.length - 1][video_idx.date]);
-	// get screen size
-	auto_display_max = Math.floor(5 * Math.pow(window.innerHeight / window.innerWidth, 1.41421356237));
-	
-	// rep
-	// get each member's repertoire
-	for (var i = 0; i < song.length; ++i) {
-		rep_list[i] = 0
-		for (var j in entry_proc[i]) {
-			// check if all singer bits are filled
-			if ((rep_list[i] & 7) === 7) {
-				break;
-			}
-			// or is faster than checking then add (i think)
-			rep_list[i] |= entry[entry_proc[i][j]][entry_idx.type];
+	if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+		// on mobile, do nothing
+	} else {
+		// on PC, test screen size
+		if (window.innerHeight / window.innerWidth < 1.3) {
+			// bad screen ratio, open new window
+			var height = screen.height;
+			var width = 0.5625 * height;
+			window.open(document.location.href,"targetWindow", "toolbar=no, location=no, status=no, menubar=no, resizable=no, width=" + width + ", height=" + height);
+			// hide original page
+			$("body > div").addClass("post_popup");
+			return;
 		}
-		// remove the non-singer bit, not needed.
-		rep_list[i] &= ~8;
 	}
+	init();
 });
 
 $(function() {
+	// revert pop-up
+	$(document).on("click", "#popup_remnant", function() {
+		$("body > div").removeClass("post_popup");
+		init();
+	});
+	
 	{ // nav
 		// nav - menu
 		$(document).on("click", "#nav_menu", function(e) {
@@ -378,6 +371,37 @@ $(function() {
 		});
 	}
 });
+
+function init() {
+	$("#input").val("");
+	// process data
+	for (var i in song) {
+		entry_proc[i] = [];
+	}
+	for (var i = 0; i < entry.length; ++i) {
+		entry_proc[entry[i][0]].push(i);
+	}
+	$("#info_version").html(version);
+	$("#info_last-update").html(video[video.length - 1][video_idx.date]);
+	// get screen size
+	auto_display_max = Math.floor(5 * Math.pow(window.innerHeight / window.innerWidth, 1.41421356237));
+	
+	// rep
+	// get each member's repertoire
+	for (var i = 0; i < song.length; ++i) {
+		rep_list[i] = 0
+		for (var j in entry_proc[i]) {
+			// check if all singer bits are filled
+			if ((rep_list[i] & 7) === 7) {
+				break;
+			}
+			// or is faster than checking then add (i think)
+			rep_list[i] |= entry[entry_proc[i][j]][entry_idx.type];
+		}
+		// remove the non-singer bit, not needed.
+		rep_list[i] &= ~8;
+	}
+}
 
 // functional functions
 

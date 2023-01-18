@@ -142,7 +142,7 @@ $(function() {
 					if (data.title === undefined) {
 						alert("再アップ/非公開の動画を共有しないで下さい。");
 					} else {
-						var tweet = song[entry[entry_id][entry_idx.song_id]][song_idx.name].trim() + " / " + song[entry[entry_id][entry_idx.song_id]][song_idx.artist] + " @" + data.title + "\n(youtu.be/" + video[entry[entry_id][entry_idx.video]][video_idx.id] + "?t=" + entry[entry_id][entry_idx.time] + ") via [site on work]";
+						var tweet = song[entry[entry_id][entry_idx.song_id]][song_idx.name].trim() + " / " + song[entry[entry_id][entry_idx.song_id]][song_idx.artist] + " @" + data.title + "\n(youtu.be/" + video[entry[entry_id][entry_idx.video]][video_idx.id] + "?t=" + entry[entry_id][entry_idx.time] + ")";
 						window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweet), "_blank");						
 					}
 			  });

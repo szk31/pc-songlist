@@ -44,6 +44,7 @@ body.no_scroll {
 
 a {
 	text-decoration: none;
+	color : inherit;
 }
 
 .hidden {
@@ -58,6 +59,26 @@ a {
 	color : Red !important;
 	-webkit-text-stroke : 0.144vw White;
 	text-stroke : 0.144vw White;
+}
+
+#popup_remnant {
+	background-color : LightGrey;
+	color : Black;
+	font-size : 5vw;
+	font-weight : bold;
+	height : 100%;
+	width : 100%;
+	display : flex;
+	justify-content : center;
+	align-items : center;
+}
+
+#popup_remnant:not(.post_popup) {
+	display : none;
+}
+
+.post_popup:not(#popup_remnant) {
+	display : none;
 }
 
 /* The navigation bar */
