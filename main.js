@@ -102,14 +102,17 @@ $(document).ready(function() {
 	if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
 		// on mobile, do nothing
 	} else {
-		// on PC, test screen size
+		// check screen ratio
+		// and hope nobody use some super-duper long screen
 		if (window.innerHeight / window.innerWidth < 1.3) {
 			// bad screen ratio, open new window
-			var height = screen.height;
-			var width = 0.5625 * height;
-			window.open(document.location.href,"targetWindow", "toolbar=no, location=no, status=no, menubar=no, resizable=no, width=" + width + ", height=" + height);
+			$("#v_screen").addClass("post_switch");
+			$("#v_screen").height("100%");
+			$("#v_screen").width(0.5625 * window.innerHeight);
+			$("#v_screen").attr("src", "index.html");
 			// hide original page
-			$("body > div").addClass("post_popup");
+			$("body > div").addClass("post_switch");
+			$("body").addClass("post_switch");
 			return;
 		}
 	}

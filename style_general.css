@@ -61,24 +61,27 @@ a {
 	text-stroke : 0.144vw White;
 }
 
-#popup_remnant {
+#v_screen {
 	background-color : LightGrey;
 	color : Black;
 	font-size : 5vw;
 	font-weight : bold;
 	height : 100%;
-	width : 100%;
+}
+
+#v_screen:not(.post_switch) {
+	display : none;
+}
+
+.post_switch:not(#v_screen):not(body) {
+	display : none;
+}
+
+body.post_switch {
 	display : flex;
 	justify-content : center;
 	align-items : center;
-}
-
-#popup_remnant:not(.post_popup) {
-	display : none;
-}
-
-.post_popup:not(#popup_remnant) {
-	display : none;
+	background-color : DarkSlateGrey;
 }
 
 /* The navigation bar */
