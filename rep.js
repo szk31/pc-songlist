@@ -532,7 +532,7 @@ function rep_display() {
 		// sang count
 		var sang_count = get_sang_count(rep_hits[i], selected_member);
 		// container div
-		var new_html = "<div class=\"rep_song_container" + (rep_selected.includes(i) ? " selected" : "") + (sang_count[0] === sang_count[1] ? " rep_mem_only" : "") + "\" id=\"rep_song_" + rep_hits[i] + "\">";
+		var new_html = "<div class=\"rep_song_container" + (rep_selected.includes(rep_hits[i]) ? " selected" : "") + (sang_count[0] === sang_count[1] ? " rep_mem_only" : "") + "\" id=\"rep_song_" + rep_hits[i] + "\">";
 		// title
 		new_html += ("<div class=\"rep_song_title\">" + song[rep_hits[i]][song_idx.name] + " / " + song[rep_hits[i]][song_idx.artist] + "</div>");
 		// info line1

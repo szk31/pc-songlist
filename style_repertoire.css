@@ -170,8 +170,9 @@
 
 .rep_song_title {
 	height : calc(1em + 0.4vw);
-	line-height : 1em;
+	line-height : 1.04em;
 	overflow : hidden;
+	overflow-inline : hidden;
 }
 
 .rep_song_kirara {
