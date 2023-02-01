@@ -38,9 +38,9 @@
 					<a href="#" id="switch_method"></a>
 				</div>
 			</div>
-			<div class="singer_container hidden">
+			<!--div class="singer_container hidden">
 				<span class="singer_select selected sing_sel_2">逢魔きらら</span><span class="singer_select selected sing_sel_1">胡桃澤もも</span><span class="singer_select selected sing_sel_0">看谷にぃあ</span>
-			</div>
+			</div-->
 			<div class="singer_icon_container">
 				<div class="singer_icon_bg selected sing_sel_2">
 					<span id="icon_kirara" class="singer_icon selected sing_sel_2"></span>
@@ -252,6 +252,7 @@
 				</div>
 				<div id="menu_bottom">
 					<div id="menu_line"></div>
+					<div id="menu_count"><span id="menu_count_icon"></span>メンバー別合計</div>
 					<div id="menu_info"><span id="menu_info_icon"></span>詳細情報</div>
 					<div id="menu_setting"><span id="menu_setting_icon"></span>設定</div>
 				</div>
@@ -287,13 +288,13 @@
 							<span id="setting_reset-input_switch" class="slider"></span>
 						</label>
 					</div>
-					<div id="setting_singer">
+					<!--div id="setting_singer">
 						　歌手の選択方法：<label class="toggle_switch">
 							<input type="checkbox" id="setting_singer_checkbox" checked>
 							<span id="setting_singer_switch" class="slider"></span>
 						</label>
 					</div>
-					<span id="setting_singer_display">アイコン</span>
+					<span id="setting_singer_display">アイコン</span-->
 					<div id="setting_random">
 						ランダム条件無視：<label class="toggle_switch">
 							<input type="checkbox" id="setting_random_checkbox">
@@ -330,6 +331,16 @@
 						<div id="rep_list_close" class="row-2 col1">閉じる</div>
 						<div id="rep_compose_tweet" class="twitter row-2 col-2">ツイート</div>
 					</div>
+				</div>
+			</div>
+			<div id="memcount" class="hidden">
+				<div id="memcount_defog" class="memcount_subblock">
+					<h3>メンバー別曲数</h3>
+					<div id="memcount_content"></div>
+				</div>
+				<div id="memcount_rep_defog" class="memcount_subblock hidden">
+					<h3>レパートリー曲数</h3>
+					<div id="memcount_rep_content"></div>
 				</div>
 			</div>
 		</div>

@@ -1,21 +1,21 @@
 // display string, refered in entry[].type
 var singer_lookup = [
-	"", 		// 0b 0000
-	"看谷にぃあ",	//    0001
-	"胡桃澤もも",	//    0010
-	"ももにぃあ",	//    0011
-	"逢魔きらら",	//    0100
-	"きらにぃあ",	//    0101
-	"ももきら",	//    0110
-	"ぷちここ",	//    0111
-	"",			//    1000
-	"ゆこち",  	//    1001
-	"しろ",		//    1010
-	"",			//    1011
-	"小悪熊ちゅい",	//    1100
-	"",			//    1101
-	"",			//    1110
-	"",			//    1111
+	"", 			// 0b 0000 0x 0
+	"看谷にぃあ",		//    0001    1
+	"胡桃澤もも",		//    0010    2
+	"ももにぃあ",		//    0011    3
+	"逢魔きらら",		//    0100    4
+	"きらにぃあ",		//    0101    5
+	"ももきら",		//    0110    6
+	"ぷちここ",		//    0111    7
+	"",				//    1000    8
+	"ゆこち",  		//    1001    9
+	"しろ",			//    1010    A
+	"",				//    1011    B
+	"小悪熊ちゅい",	//    1100    C
+	"",				//    1101    D
+	"",				//    1110    E
+	"",				//    1111    F
 ];
 
 // (not used)
@@ -36,6 +36,19 @@ var display_order = [
 	10,		// 1101
 	9,		// 1110
 	8,		// 1111
+];
+
+var member_display_order = [
+	7,
+	6,
+	5,
+	3,
+	4,
+	12,
+	2,
+	10,
+	1,
+	9
 ];
 
 // series search
@@ -68,7 +81,7 @@ var video_idx = {
 	date : 1
 };
 
-var version = "1.1.4";
+var version = "1.1.5";
 
 /* control / memories */
 
@@ -242,6 +255,55 @@ $(function() {
 			}
 		});
 		
+		// menu - mem_count
+		$(document).on("click", "#menu_count", function() {
+			// hide / show things
+			$("#popup_container").removeClass("hidden");
+			$("#memcount").removeClass("hidden");
+			$("#menu_container").addClass("hidden");
+			$("#nav_menu").removeClass("menu_opened");
+			prevent_menu_popup = true;
+			
+			// generate if not generated
+			if ($("#memcount_content").html() === "") {
+				// is empty, generate
+				var entry_count = [];
+				// entry_count[singer_id][0:public, 1:member, 2:private]
+				for (var i = 0; i < 16; ++i) {
+					entry_count[i] = [0, 0, 0];
+				}
+				for (var i = 0; i < entry.length; ++i) {
+					if (is_private(i)) {
+						entry_count[entry[i][entry_idx.type]][2]++;
+						continue;
+					}
+					if (entry[i][entry_idx.note].includes("【メン限")) {
+						entry_count[entry[i][entry_idx.type]][1]++;
+						continue;
+					}
+					entry_count[entry[i][entry_idx.type]][0]++;
+				}
+				
+				// output as html
+				var new_html = "<table id=\"memcount_table\"><tr><th></th><th>通常</th><th>メン限</th><th>非公開</th></tr>";
+				for (var i in member_display_order) {
+					var mem_id = member_display_order[i];
+					// new row, name
+					new_html += ("<tr class=\"memcount_row singer_" + mem_id + "\"><td><div class=\"memcount_name\">" + singer_lookup[mem_id] + "</div></td>");
+					// normal count
+					new_html += ("<td" + (entry_count[mem_id][0] === 0 ? " class=\"memcount_empty\"" : "") + ">" + entry_count[mem_id][0] + "</td>");
+					// member count
+					new_html += ("<td" + (entry_count[mem_id][1] === 0 ? " class=\"memcount_empty\"" : "") + ">" + entry_count[mem_id][1] + "</td>");
+					// private count
+					new_html += ("<td" + (entry_count[mem_id][2] === 0 ? " class=\"memcount_empty\"" : "") + ">" + entry_count[mem_id][2] + "</td>");
+					// close row
+					new_html += "</tr>";
+				}
+				
+				$("#memcount_content").html(new_html);
+			}
+		});
+		
 		// menu - information
 		$(document).on("click", "#menu_info", function() {
 			$("#popup_container").removeClass("hidden");
@@ -265,10 +327,23 @@ $(function() {
 			}
 		});
 	}
-
+	
+	// memcount -fog> return, swap content
+	$(document).on("click", "#memcount", function(e) {
+		if ($(e.target).attr("id") === "memcount") {
+			$("#memcount").addClass("hidden");
+			$("#popup_container").addClass("hidden");
+			$(document.body).removeClass("no_scroll");
+			prevent_menu_popup = false;
+		} else {
+			// pressing on the block
+			$(".memcount_subblock").toggleClass("hidden");
+		}
+	});
+	
 	// information -fog> return
 	$(document).on("click", "#information", function(e) {
-		if (!($(e.target).parents(".defog").length ||  $(e.target).hasClass("defog"))) {
+		if ($(e.target).attr("id") === "information") {
 			$("#information").addClass("hidden");
 			$("#popup_container").addClass("hidden");
 			$(document.body).removeClass("no_scroll");

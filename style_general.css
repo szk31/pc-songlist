@@ -205,14 +205,22 @@ body.post_switch {
 #menu_bottom {
 	position : absolute;
 	bottom : 4vw;
-	height : 30vw;
+	height : 40vw;
 	width : 75vw;
 }
 
-#menu_info, #menu_setting {
+#menu_info, #menu_setting, #menu_count {
 	display : flex;
 	margin : 2vw;
 	align-items : center;
+}
+
+#menu_count_icon {
+	position : relative;
+	padding: 1vw;
+	content : url("icon/sigma.png");
+	width : 8vw;
+	height : 8vw;
 }
 
 #menu_info_icon {
@@ -237,6 +245,65 @@ body.post_switch {
 	top : 10vw;
 	height : calc(100% - 10vw);
 	width : 100%;
+}
+
+/* mem count section */
+#memcount {
+	top : 0;
+	position : absolute;
+	width : 100%;
+	height : 100%;
+	background-color : rgba(31, 31, 31, 0.5);
+}
+
+#memcount h3 {
+	font-size : 6vw;
+	margin-block : 0.4em;
+}
+
+#memcount_defog,
+#memcount_rep_defog {
+	position : absolute;
+	left : 50%;
+	top : 50%;
+	transform: translate(-50%, -50%);
+	width : 84vw;
+	height : calc(12vh + 88vw);
+	background-color : MediumPurple;
+	color : Snow;
+	text-align : center;
+	border: none;
+	border-radius: 2vw;
+}
+
+#memcount_table {
+	margin-left: auto;
+	margin-right: auto;
+	background-color : AliceBlue;
+	padding : 1.2vw;
+	border-radius : 2vw;
+	font-weight : bold;
+	font-size : 4vw;
+}
+
+.memcount_row>td {
+	border-radius : 0.6vw;
+}
+
+.memcount_row>td:not(.memcount_name) {
+	text-align : center;
+	padding : 0.4vw 1.2vw;
+}
+
+.memcount_row>.memcount_empty {
+	background-color : #7f7f7f !important;
+	color : rgba(0, 0, 0, 0) !important;
+	background-image: linear-gradient(to bottom right, transparent calc(50% - 1px), AliceBlue, transparent calc(50% + 1px)); 
+}
+
+.memcount_name {
+	padding : 0.4vw 1.2vw 0.4vw 4vw;
+	text-align : right;
 }
 
 /* info section */
