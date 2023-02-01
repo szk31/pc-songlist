@@ -169,7 +169,7 @@
 }
 
 .rep_song_title {
-	height : calc(1em + 0.32vw);
+	height : 1.04em;
 	line-height : 1.04em;
 	overflow : hidden;
 	overflow-inline : hidden;
