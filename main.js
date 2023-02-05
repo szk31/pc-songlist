@@ -568,9 +568,6 @@ function get_attr(id) {
 
 /*
  * to do
- * search by attr mode
- * editing request list
- * copy to clip board
  * copied to clipboard message pop up
  *
  *
