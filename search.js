@@ -432,7 +432,7 @@ function update_display() {
 				"</div>" +
 				"<div class=\"song_icon_container\">" +
 					"<div id=\"fold_" + current_song + "\" class=\"song_fold_icon" + (show ? "" : " closed") + "\"></div>" +
-					"<div id=\"copy_name_" + current_song + "\" class=\"song_copy_icon song_" + current_song + "\"></div>" +
+					"<div id=\"copy_name_" + current_song + "\" class=\"song_copy_icon song_" + current_song + (show ? "" : " hidden") + "\"></div>" +
 				"</div>" +
 			"</div>");
 		}
