@@ -535,7 +535,7 @@ function rep_display() {
 		case "release" : {
 			// release date of song
 			var date_lookup = [];
-			for (var i in song) {
+			for (var i = 1; i < song.length; ++i) {
 				date_lookup[i] = to8601(song[i][song_idx.release]).getTime();
 			}
 			rep_hits.sort((a, b) => {
