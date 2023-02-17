@@ -552,7 +552,8 @@ function rep_display() {
 		// info line1
 		new_html += "<div class=\"rep_song_info grid_block-4\">";
 		// last sang
-		new_html += ("<div>" + get_date_different(get_last_sang(rep_hits[i], selected_member)) + "日前</div>");
+		var delta_last = get_date_different(get_last_sang(rep_hits[i], selected_member));
+		new_html += ("<div>" + (delta_last === 0 ? "今日" : (delta_last + "日前")) + "</div>");
 		// count
 		new_html += ("<div>" + sang_count[0] + "回" + (sang_count[1] > 0 ? (sang_count[0] === sang_count[1] ? " (メン限のみ)" : " (" + sang_count[1] + "回メン限)") : "") + "</div>");
 		// type
