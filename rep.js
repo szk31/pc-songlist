@@ -497,7 +497,7 @@ function rep_display() {
 		case "count" :
 			// sang entry count
 			// create a lookup array for all songs for the current member selection
-			var entry_count = new Array();
+			var entry_count = [];
 			for (var i in song) {
 				if (selected_member === 7) {
 					entry_count[i] = entry_proc[i].length;
@@ -517,24 +517,35 @@ function rep_display() {
 				return (rep_sort_asd ? 1 : -1) * (entry_count[b] - entry_count[a]);
 			});
 			break;
-		case "date" :
+		case "date" : {
 			// sort with last sang date
+			var date_lookup = [];
+			for (var i in song) {
+				var dummy = get_last_sang(i, selected_member);
+				date_lookup[i] = dummy ? dummy.getTime() : 0;
+			}
 			rep_hits.sort((a, b) => {
-				if (get_last_sang(b, selected_member).getTime() === get_last_sang(a, selected_member).getTime()) {
+				if (date_lookup[a] === date_lookup[b]) {
 					return 0;
 				}
-				return (rep_sort_asd ? 1 : -1) * (get_last_sang(b, selected_member).getTime() - get_last_sang(a, selected_member).getTime());
+				return (rep_sort_asd ? 1 : -1) * (date_lookup[b] - date_lookup[a]);
 			});
 			break;
-		case "release" :
+		}
+		case "release" : {
 			// release date of song
+			var date_lookup = [];
+			for (var i in song) {
+				date_lookup[i] = to8601(song[i][song_idx.release]).getTime();
+			}
 			rep_hits.sort((a, b) => {
-				if (song[b][song_idx.release] === song[a][song_idx.release]) {
+				if (date_lookup[a] === date_lookup[b]) {
 					return 0;
 				}
-				return (rep_sort_asd ? 1 : -1) * (to8601(song[b][song_idx.release]).getTime() - to8601(song[a][song_idx.release]).getTime());
+				return (rep_sort_asd ? 1 : -1) * (date_lookup[b] - date_lookup[a]);
 			});
 			break;
+		}
 		default : 
 			// anything else is error
 			console.log("rep_sort of type \"" + rep_sort + "\" not found");
