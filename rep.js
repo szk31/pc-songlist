@@ -496,11 +496,25 @@ function rep_display() {
 			break;
 		case "count" :
 			// sang entry count
+			// create a lookup array for all songs for the current member selection
+			var entry_count = new Array();
+			for (var i in song) {
+				if (selected_member === 7) {
+					entry_count[i] = entry_proc[i].length;
+					continue;
+				}
+				entry_count[i] = 0;
+				for (var j in entry_proc[i]) {
+					if (entry[entry_proc[i][j]][entry_idx.type] & selected_member) {
+						entry_count[i]++;
+					} 
+				}
+			}
 			rep_hits.sort((a, b) => {
-				if (entry_proc[b].length === entry_proc[a].length) {
+				if (entry_count[b] === entry_count[a]) {
 					return 0;
 				}
-				return (rep_sort_asd ? 1 : -1) * (entry_proc[b].length - entry_proc[a].length);
+				return (rep_sort_asd ? 1 : -1) * (entry_count[b] - entry_count[a]);
 			});
 			break;
 		case "date" :

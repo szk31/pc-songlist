@@ -81,7 +81,7 @@ var video_idx = {
 	date : 1
 };
 
-var version = "1.1.6";
+var version = "1.1.7";
 
 /* control / memories */
 
