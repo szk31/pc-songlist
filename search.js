@@ -428,7 +428,7 @@ function update_display() {
 			"<div class=\"song_name_container " + (loaded_count % 2 === 0 ? "odd_colour" : "even_colour") + "\" id=\"" + current_song + "\">" +
 				"<div class=\"song_rap\">" +
 					"<div class=\"song_name\">" + song_name + "</div>" +
-					(show ? ("<div class=\"song_credit" + (song[current_song][song_idx.artist].length > 30 ? " long_credit" : "") + " song_" + current_song + "\">" + song[current_song][song_idx.artist] + "</div>") : "") +
+					"<div class=\"song_credit" + (show ? "" : " hidden") + (song[current_song][song_idx.artist].length > 30 ? " long_credit" : "") + " song_" + current_song + "\">" + song[current_song][song_idx.artist] + "</div>" +
 				"</div>" +
 				"<div class=\"song_icon_container\">" +
 					"<div id=\"fold_" + current_song + "\" class=\"song_fold_icon" + (show ? "" : " closed") + "\"></div>" +
