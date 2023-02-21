@@ -34,22 +34,58 @@
 		<div id="search_section" class="section_container">
 			<div id="input_container">
 				<input id="input" type="text" placeholder="曲名/読みで検索">
-				<div id="switch_container">
-					<a href="#" id="switch_method"></a>
+				<div id="search_options_button_container">
+					<a href="#" id="search_options_button"></a>
 				</div>
 			</div>
-			<!--div class="singer_container hidden">
-				<span class="singer_select selected sing_sel_2">逢魔きらら</span><span class="singer_select selected sing_sel_1">胡桃澤もも</span><span class="singer_select selected sing_sel_0">看谷にぃあ</span>
-			</div-->
-			<div class="singer_icon_container">
-				<div class="singer_icon_bg selected sing_sel_2">
-					<span id="icon_kirara" class="singer_icon selected sing_sel_2"></span>
+			<div id="search_options_container" class="hidden">
+				<div class="search_options_title">歌手選択</div>
+				<div class="search_options_underline"></div>
+				<div class="singer_icon_container">
+					<div class="singer_icon_bg selected sing_sel_2">
+						<span id="icon_kirara" class="singer_icon selected sing_sel_2"></span>
+					</div>
+					<div class="singer_icon_bg selected sing_sel_1">
+						<span id="icon_momo" class="singer_icon selected sing_sel_1"></span>
+					</div>
+					<div class="singer_icon_bg selected sing_sel_0">
+						<span id="icon_nia" class="singer_icon selected sing_sel_0"></span>
+					</div>
 				</div>
-				<div class="singer_icon_bg selected sing_sel_1">
-					<span id="icon_momo" class="singer_icon selected sing_sel_1"></span>
+				<div class="search_options_title">検索方法</div>
+				<div class="search_options_underline"></div>
+				<div class="search_options_subblock">
+					<label id="search_options_songname" class="search_option_group1 col-1">
+						<div id="search_options_btn_songname" class="radio search_options_radio selected"></div>
+						<div class="attr_name">曲名</div>
+					</label>
+					<label id="search_options_artist" class="search_option_group1 col-2">
+						<div id="search_options_btn_artist" class="radio search_options_radio"></div>
+						<div class="attr_name">アーティスト名</div>
+					</label>
 				</div>
-				<div class="singer_icon_bg selected sing_sel_0">
-					<span id="icon_nia" class="singer_icon selected sing_sel_0"></span>
+				<div class="search_options_title">並び順</div>
+				<div class="search_options_underline"></div>
+				<div class="search_options_subblock">
+					<label id="search_options_date" class="search_option_group2 col-1">
+						<div id="search_options_btn_date" class="radio search_options_radio selected"></div>
+						<div class="attr_name">日付順</div>
+					</label>
+					<label id="search_options_type" class="search_option_group2 col-2">
+						<div id="search_options_btn_type" class="radio search_options_radio"></div>
+						<div class="attr_name">歌い手順</div>
+					</label>
+				</div>
+				<div class="search_options_underline"></div>
+				<div class="search_options_subblock">
+					<label id="search_options_asd" class="search_option_group3 col-1">
+						<div id="search_options_btn_asd" class="radio search_options_radio selected"></div>
+						<div class="attr_name">古い順</div>
+					</label>
+					<label id="search_options_des" class="search_option_group3 col-2">
+						<div id="search_options_btn_des" class="radio search_options_radio"></div>
+						<div class="attr_name">新しい順</div>
+					</label>
 				</div>
 			</div>
 			<span id="search_display"></span>
@@ -58,7 +94,7 @@
 			<div id="filter_container">
 				<div id="filter_entry">
 					<div id="filter_entry_title" class="filter_title">
-						<div id="filter_entry_title_name" class="filter_title_name">既存<!--s>/属性</s--></div>
+						<div id="filter_entry_title_name" class="filter_title_name">既存</div>
 						<div id="filter_entry_close" class="filter_close closed"></div>
 					</div>
 					<div id="filter_entry_content" class="hidden">
@@ -81,31 +117,6 @@
 								<label id="filter_icon_inter" class="filter_singer_group">
 									<div id="singer_inter" class="radio singer_checkbox"></div>
 									<div class="attr_name">⋂</div>
-								</label>
-							</div>
-						</div>
-						<div id="filter_entry_attr_container" class="filter_subblock_content hidden">
-							<p class="filter_subblock_title">属性選択</p>
-							<div class="grid_block-2">
-								<label id="attr_container_all" class="filter_entry_attr_item row-1 col-1">
-									<div id="attr_all" class="checkbox attr_checkbox selected"></div>
-									<div class="attr_name">全部</div>
-								</label>
-								<label id="attr_container_oke" class="filter_entry_attr_item row-1 col-2">
-									<div id="attr_oke" class="checkbox attr_checkbox selected"></div>
-									<div>通常(音源)</div>
-								</label>
-								<label id="attr_container_aca" class="filter_entry_attr_item row-2 col-1">
-									<div id="attr_aca" class="checkbox attr_checkbox selected"></div>
-									<div>アカペラ</div>
-								</label>
-								<label id="attr_container_gui" class="filter_entry_attr_item row-2 col-2">
-									<div id="attr_gui" class="checkbox attr_checkbox selected"></div>
-									<div>弾き語り</div>
-								</label>
-								<label id="attr_container_asm" class="filter_entry_attr_item row-3 col-1">
-									<div id="attr_asm" class="checkbox attr_checkbox selected"></div>
-									<div>ASMR弾き語り</div>
 								</label>
 							</div>
 						</div>

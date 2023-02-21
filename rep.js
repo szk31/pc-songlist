@@ -511,9 +511,6 @@ function rep_display() {
 				}
 			}
 			rep_hits.sort((a, b) => {
-				if (entry_count[b] === entry_count[a]) {
-					return 0;
-				}
 				return (rep_sort_asd ? 1 : -1) * (entry_count[b] - entry_count[a]);
 			});
 			break;
@@ -525,9 +522,6 @@ function rep_display() {
 				date_lookup[i] = dummy ? dummy.getTime() : 0;
 			}
 			rep_hits.sort((a, b) => {
-				if (date_lookup[a] === date_lookup[b]) {
-					return 0;
-				}
 				return (rep_sort_asd ? 1 : -1) * (date_lookup[b] - date_lookup[a]);
 			});
 			break;
@@ -539,9 +533,6 @@ function rep_display() {
 				date_lookup[i] = to8601(song[i][song_idx.release]).getTime();
 			}
 			rep_hits.sort((a, b) => {
-				if (date_lookup[a] === date_lookup[b]) {
-					return 0;
-				}
 				return (rep_sort_asd ? 1 : -1) * (date_lookup[b] - date_lookup[a]);
 			});
 			break;

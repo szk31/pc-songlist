@@ -18,7 +18,7 @@ var singer_lookup = [
 	"",				//    1111    F
 ];
 
-// (not used)
+// display order of search
 var display_order = [
 	-1,		// 0000
 	7, 		// 0001
@@ -38,6 +38,7 @@ var display_order = [
 	8,		// 1111
 ];
 
+// display order of rep display
 var member_display_order = [
 	7,
 	6,
@@ -81,7 +82,7 @@ var video_idx = {
 	date : 1
 };
 
-var version = "1.1.12";
+var version = "1.2.0";
 
 /* control / memories */
 
