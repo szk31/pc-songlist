@@ -20,10 +20,11 @@
 
 #input {
 	width : 86vw;
-	padding : 1vw 1vw;
+	padding : 1vw;
 	margin : 1.5vw 2vw;
 	height : 10vw;
 	font-size : 5vw;
+	border-radius : 1.2vw;
 }
 
 #switch_container {

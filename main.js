@@ -82,7 +82,7 @@ var video_idx = {
 	date : 1
 };
 
-var version = "1.2.0";
+var version = "1.2.1";
 
 /* control / memories */
 
@@ -219,41 +219,42 @@ $(function() {
 		// menu -> page
 		$(document).on("click", ".menu2page", function(e) {
 			var target = ($(e.target).attr("id")).replace("menu2page_", "");
-			if (target !== current_page) {
-				current_page = target;
-				$(".menu2page_selected").removeClass("menu2page_selected");
-				$("#" + $(e.target).attr("id")).addClass("menu2page_selected");
-				
-				// show / hide section
-				$(".section_container").addClass("hidden");
-				switch (target) {
-					case "search" :
-						// show section
-						$("#search_section").removeClass("hidden");
-						$("#nav_search_random").removeClass("hidden");
-						$("#nav_share_rep").addClass("hidden");
-						$("#nav_title").html("曲検索");
-						// reset input -> reload
-						$("#input").val("");
-						search();
-						break;
-					case "repertoire" : 
-						// show section
-						$("#repertoire_section").removeClass("hidden");
-						$("#nav_search_random").addClass("hidden");
-						$("#nav_share_rep").removeClass("hidden");
-						$("#nav_title").html("レパートリー");
-						// do whatever needed
-						$(window).scrollTop(0);
-						rep_search();
-						break;
-				}
-				
-				// close menu
-				$("#menu_container").addClass("hidden");
-				$("#nav_menu").removeClass("menu_opened");
-				$(document.body).removeClass("no_scroll");
+			if (target === current_page) {
+				return;
 			}
+			current_page = target;
+			$(".menu2page_selected").removeClass("menu2page_selected");
+			$("#" + $(e.target).attr("id")).addClass("menu2page_selected");
+			
+			// show / hide section
+			$(".section_container").addClass("hidden");
+			switch (target) {
+				case "search" :
+					// show section
+					$("#search_section").removeClass("hidden");
+					$("#nav_search_random").removeClass("hidden");
+					$("#nav_share_rep").addClass("hidden");
+					$("#nav_title").html("曲検索");
+					// reset input -> reload
+					$("#input").val("");
+					search();
+					break;
+				case "repertoire" : 
+					// show section
+					$("#repertoire_section").removeClass("hidden");
+					$("#nav_search_random").addClass("hidden");
+					$("#nav_share_rep").removeClass("hidden");
+					$("#nav_title").html("レパートリー");
+					// do whatever needed
+					$(window).scrollTop(0);
+					rep_search();
+					break;
+			}
+			
+			// close menu
+			$("#menu_container").addClass("hidden");
+			$("#nav_menu").removeClass("menu_opened");
+			$(document.body).removeClass("no_scroll");
 		});
 		
 		// menu - mem_count
@@ -266,43 +267,44 @@ $(function() {
 			prevent_menu_popup = true;
 			
 			// generate if not generated
-			if ($("#memcount_content").html() === "") {
-				// is empty, generate
-				var entry_count = [];
-				// entry_count[singer_id][0:public, 1:member, 2:private]
-				for (var i = 0; i < 16; ++i) {
-					entry_count[i] = [0, 0, 0];
-				}
-				for (var i = 0; i < entry.length; ++i) {
-					if (is_private(i)) {
-						entry_count[entry[i][entry_idx.type]][2]++;
-						continue;
-					}
-					if (entry[i][entry_idx.note].includes("【メン限")) {
-						entry_count[entry[i][entry_idx.type]][1]++;
-						continue;
-					}
-					entry_count[entry[i][entry_idx.type]][0]++;
-				}
-				
-				// output as html
-				var new_html = "<table id=\"memcount_table\"><tr><th></th><th>通常</th><th>メン限</th><th>非公開</th></tr>";
-				for (var i in member_display_order) {
-					var mem_id = member_display_order[i];
-					// new row, name
-					new_html += ("<tr class=\"memcount_row singer_" + mem_id + "\"><td><div class=\"memcount_name\">" + singer_lookup[mem_id] + "</div></td>");
-					// normal count
-					new_html += ("<td" + (entry_count[mem_id][0] === 0 ? " class=\"memcount_empty\"" : "") + ">" + entry_count[mem_id][0] + "</td>");
-					// member count
-					new_html += ("<td" + (entry_count[mem_id][1] === 0 ? " class=\"memcount_empty\"" : "") + ">" + entry_count[mem_id][1] + "</td>");
-					// private count
-					new_html += ("<td" + (entry_count[mem_id][2] === 0 ? " class=\"memcount_empty\"" : "") + ">" + entry_count[mem_id][2] + "</td>");
-					// close row
-					new_html += "</tr>";
-				}
-				
-				$("#memcount_content").html(new_html);
+			if ($("#memcount_content").html() !== "") {
+				return;
 			}
+			// is empty, generate
+			var entry_count = [];
+			// entry_count[singer_id][0:public, 1:member, 2:private]
+			for (var i = 0; i < 16; ++i) {
+				entry_count[i] = [0, 0, 0];
+			}
+			for (var i = 0; i < entry.length; ++i) {
+				if (is_private(i)) {
+					entry_count[entry[i][entry_idx.type]][2]++;
+					continue;
+				}
+				if (entry[i][entry_idx.note].includes("【メン限")) {
+					entry_count[entry[i][entry_idx.type]][1]++;
+					continue;
+				}
+				entry_count[entry[i][entry_idx.type]][0]++;
+			}
+			
+			// output as html
+			var new_html = "<table id=\"memcount_table\"><tr><th></th><th>通常</th><th>メン限</th><th>非公開</th></tr>";
+			for (var i in member_display_order) {
+				var mem_id = member_display_order[i];
+				// new row, name
+				new_html += ("<tr class=\"memcount_row singer_" + mem_id + "\"><td><div class=\"memcount_name\">" + singer_lookup[mem_id] + "</div></td>");
+				// normal count
+				new_html += ("<td" + (entry_count[mem_id][0] === 0 ? " class=\"memcount_empty\"" : "") + ">" + entry_count[mem_id][0] + "</td>");
+				// member count
+				new_html += ("<td" + (entry_count[mem_id][1] === 0 ? " class=\"memcount_empty\"" : "") + ">" + entry_count[mem_id][1] + "</td>");
+				// private count
+				new_html += ("<td" + (entry_count[mem_id][2] === 0 ? " class=\"memcount_empty\"" : "") + ">" + entry_count[mem_id][2] + "</td>");
+				// close row
+				new_html += "</tr>";
+			}
+			
+			$("#memcount_content").html(new_html);
 		});
 		
 		// menu - information
@@ -439,11 +441,7 @@ $(function() {
 			if (do_random_anyway) {
 				$("#nav_search_random").removeClass("disabled");
 			} else {
-				if ($("#input").val() === "") {
-					$("#nav_search_random").removeClass("disabled");
-				} else {
-					$("#nav_search_random").addClass("disabled");
-				}
+				$("#nav_search_random").toggleClass("disabled", $("#input").val() !== "");
 			}
 			loading = "";
 			search();
