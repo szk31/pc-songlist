@@ -80,7 +80,6 @@ a {
 body.post_switch {
 	display : flex;
 	justify-content : center;
-	align-items : center;
 	background-color : DarkSlateGrey;
 }
 

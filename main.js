@@ -529,11 +529,13 @@ function to8601(date_string) {
 	);
 }
 
+var today = new Date().setHours(0, 0, 0, 0);
+
 // get day different between {date1 and date2} or {date1 and today}
-function get_date_different(date1, date2) {
+function get_date_different(date1, date2 = today) {
 	date1 = (typeof(date1) === "string") ? new Date(date1) : date1;
-	date2 = date2 === undefined ? new Date(new Date().setHours(0, 0, 0, 0)) : new Date(date2);
-	return Math.floor(Math.abs(date1.getTime() - date2.getTime()) / 86400000);
+	date2 = date2 === undefined ? date2 : new Date(date2);
+	return Math.round(Math.abs(date1 - date2) / 86400000);
 }
 
 // get entry count of all entry and member-only entry that fufills mask
