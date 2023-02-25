@@ -532,7 +532,7 @@ function to8601(date_string) {
 // get day different between {date1 and date2} or {date1 and today}
 function get_date_different(date1, date2) {
 	date1 = (typeof(date1) === "string") ? new Date(date1) : date1;
-	date2 = date2 === undefined ? new Date().setHours(0, 0, 0, 0) : new Date(date2);
+	date2 = date2 === undefined ? new Date(new Date().setHours(0, 0, 0, 0)) : new Date(date2);
 	return Math.floor(Math.abs(date1.getTime() - date2.getTime()) / 86400000);
 }
 
