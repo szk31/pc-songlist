@@ -294,7 +294,7 @@ function auto_search() {
 }
 
 function search() {
-	var e = $("#input").val();
+	var e = $("#input").val().trim();
 	if (e === loading) {
 		return;
 	}
