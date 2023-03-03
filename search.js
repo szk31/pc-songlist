@@ -26,11 +26,6 @@ $(function() {
 			auto_search();
 		});
 		
-		// search - input::focus
-		$(document).on("focus", "#input", function() {
-			auto_search();
-		});
-
 		// search - input - autocomplete - selection
 		$(document).on("mousedown", ".auto_panel", function() {
 			var e = $(this).attr("id");
@@ -52,12 +47,13 @@ $(function() {
 			}
 		});
 		
-		// search - input::on_click -> reset
+		// search - input::focus -> reset, auto complete
 		$(document).on("focus", "#input", function(e) {
 			if (do_clear_input) {
 				$(e.target).val("");
 				$("#nav_search_random").removeClass("disabled");
 			}
+			auto_search();
 		});
 		
 		// search - collapse option menu
@@ -131,21 +127,15 @@ $(function() {
 			update_display();
 		});
 		
+		// search - options - others - max display - input
+		$(document).on("input", "#search_options_count_input", function() {
+			max_count_update(this);
+		});
+		
 		// search - options - others - max display
 		$(document).on("blur", "#search_options_count_input", function() {
-			var e = $("#search_options_count_input").val();
-			
-			// remove anything thats not 0~9
-			e = e.replace(/[^\d]/g, "");
-			
-			// check if e is blank (after replace)
-			if (e === "") {
-				$("#search_options_count_input").val(e);
-				return;
-			}
-			
 			// check min max
-			e = Math.min(400, Math.max(1, parseInt(e)));
+			var e = Math.min(400, Math.max(1, parseInt($("#search_options_count_input").val())));
 			$("#search_options_count_input").val(e);
 			max_display = e;
 			update_display();
@@ -549,4 +539,18 @@ function update_display() {
 
 function timestamp(id) {
 	return entry[id][entry_idx.time] === 0 ? "" : "?t=" + entry[id][entry_idx.time];
+}
+
+function max_count_update(node) {
+	// store cursor position
+	var start = node.selectionStart,
+		  end = node.selectionEnd,
+	        e = $(node).val();
+	
+	// remove anything thats not 0~9, remove last character if too long
+	e = e.replace(/[^\d]/g, "").substring(0, 3);
+	// set value to processed value
+	$("#search_options_count_input").val(e);
+	// restore cursor position
+	node.setSelectionRange(start, end);
 }

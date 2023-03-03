@@ -9,7 +9,7 @@ var singer_lookup = [
 	"ももきら",		//    0110    6
 	"ぷちここ",		//    0111    7
 	"-empty-",		//    1000    8
-	"ゆこち",  		//    1001    9
+	"つきみゆこ",  		//    1001    9
 	"愛白ふりる",		//    1010    A
 	"",				//    1011    B
 	"小悪熊ちゅい",		//    1100    C
@@ -82,7 +82,7 @@ var video_idx = {
 	date : 1
 };
 
-var version = "1.2.3";
+var version = "1.2.4";
 
 /* control / memories */
 
