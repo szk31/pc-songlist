@@ -54,7 +54,7 @@
 				</div>
 				<div class="search_options_title">検索方法</div>
 				<div class="search_options_underline"></div>
-				<div class="search_options_subblock">
+				<div class="search_options_subblock search_grid_2">
 					<label id="search_options_songname" class="search_option_group1 col-1">
 						<div id="search_options_btn_songname" class="radio search_options_radio selected"></div>
 						<div class="attr_name">曲名</div>
@@ -66,7 +66,7 @@
 				</div>
 				<div class="search_options_title">並び順</div>
 				<div class="search_options_underline"></div>
-				<div class="search_options_subblock">
+				<div class="search_options_subblock search_grid_3">
 					<label id="search_options_date" class="search_option_group2 col-1">
 						<div id="search_options_btn_date" class="radio search_options_radio selected"></div>
 						<div class="attr_name">日付順</div>
@@ -75,16 +75,30 @@
 						<div id="search_options_btn_type" class="radio search_options_radio"></div>
 						<div class="attr_name">歌い手順</div>
 					</label>
-				</div>
-				<div class="search_options_underline"></div>
-				<div class="search_options_subblock">
-					<label id="search_options_asd" class="search_option_group3 col-1">
-						<div id="search_options_btn_asd" class="radio search_options_radio selected"></div>
-						<div class="attr_name">古い順</div>
+					<label id="search_options_asd" class="search_option_group3 col-3">
+						<div id="search_options_btn_asd" class="checkbox search_options_checkbox selected"></div>
+						<div class="attr_name">古い順&nbsp;(⇌新しい順)</div>
 					</label>
-					<label id="search_options_des" class="search_option_group3 col-2">
-						<div id="search_options_btn_des" class="radio search_options_radio"></div>
-						<div class="attr_name">新しい順</div>
+				</div>
+				<div class="search_options_title">その他</div>
+				<div class="search_options_underline"></div>
+				<div class="search_options_subblock search_grid_2">
+					<label id="search_options_count" class="row-1 col-1">
+						<div class="search_options_count_text attr_name">
+							最大表示数：<input id="search_options_count_input" type="tel" inputmode="numeric" value="100">
+						</div>
+					</label>
+					<label id="search_options_displayHidden" class="search_option_group4 row-1 col-2">
+						<div id="search_options_btn_displayHidden" class="checkbox search_options_checkbox selected"></div>
+						<div class="attr_name">非公開動画表示</div>
+					</label>
+					<label id="search_options_reset" class="search_option_group4 row-2 col-1">
+						<div id="search_options_btn_reset" class="checkbox search_options_checkbox"></div>
+						<div class="attr_name">入力リセット</div>
+					</label>
+					<label id="search_options_randomAnyway" class="search_option_group4 row-2 col-2">
+						<div id="search_options_btn_randomAnyway" class="checkbox search_options_checkbox"></div>
+						<div class="attr_name">ランダム条件無視</div>
 					</label>
 				</div>
 			</div>
@@ -265,7 +279,6 @@
 					<div id="menu_line"></div>
 					<div id="menu_count"><span id="menu_count_icon"></span>メンバー別合計</div>
 					<div id="menu_info"><span id="menu_info_icon"></span>詳細情報</div>
-					<div id="menu_setting"><span id="menu_setting_icon"></span>設定</div>
 				</div>
 			</div>
 		</div>
@@ -278,43 +291,6 @@
 					<div>
 						Creator : shizuku3158<br />
 						<a href="https://www.twitter.com/8513ukuzihs" id="info_twitter" target="_blank" class="twitter">twitter</a>
-					</div>
-				</div>
-			</div>
-			<div id="setting" class="hidden">
-				<div id="setting_defog" class="scrollbar">
-					<h3>設定</h3>
-					<div id="setting_max-display">
-						　&numsp;&numsp;&numsp;最大表示数： <input id="setting_max-display_value" class="setting_input" type="tel" inputmode="numeric" value="100">
-					</div>
-					<div id="setting_display-private">
-						非公開動画の表示：<label class="toggle_switch">
-							<input type="checkbox" id="setting_display-private_checkbox">
-							<span id="setting_display-private_switch" class="slider"></span>
-						</label>
-					</div>
-					<div id="setting_reset-input">
-						　入力のリセット：<label class="toggle_switch">
-							<input type="checkbox" id="setting_reset-input_checkbox">
-							<span id="setting_reset-input_switch" class="slider"></span>
-						</label>
-					</div>
-					<!--div id="setting_singer">
-						　歌手の選択方法：<label class="toggle_switch">
-							<input type="checkbox" id="setting_singer_checkbox" checked>
-							<span id="setting_singer_switch" class="slider"></span>
-						</label>
-					</div>
-					<span id="setting_singer_display">アイコン</span-->
-					<div id="setting_random">
-						ランダム条件無視：<label class="toggle_switch">
-							<input type="checkbox" id="setting_random_checkbox">
-							<span id="setting_random_switch" class="slider"></span>
-						</label>
-					</div>
-					<div id="setting_button_container">
-						<a href="#" id="setting_default">リセット</a>
-						<a href="#" id="setting_confirm"> 確定 </a>
 					</div>
 				</div>
 			</div>

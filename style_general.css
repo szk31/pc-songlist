@@ -204,7 +204,7 @@ body.post_switch {
 #menu_bottom {
 	position : absolute;
 	bottom : 4vw;
-	height : 40vw;
+	height : 30vw;
 	width : 75vw;
 }
 
@@ -347,28 +347,7 @@ body.post_switch {
 	width: fit-content;
 }
 
-/* setting section */
-#setting {
-	position : absolute;
-	width : 100%;
-	height : 100%;
-	background-color : rgba(31, 31, 31, 0.5);
-}
-
-#setting_defog {
-	position : absolute;
-	left : 15vw;
-	top : 7.5vh;
-	width : 70vw;
-	height : 75vh;
-	background-color : MediumPurple;
-	color : Snow;
-	font-size : 4vw;
-	text-align : center;
-	border: none;
-	border-radius: 2vw;
-	overflow-y : auto;
-}
+/* scrollbar section */
 
 .scrollbar::-webkit-scrollbar-track {
 	background-color : rgba(0, 0, 0, 0);
@@ -382,104 +361,4 @@ body.post_switch {
 	background-color : #C6BED8;
 	border-radius: 2vw;
 	border : 1vw solid MediumPurple;
-}
-
-#setting_button_container {
-	position : absolute;
-	width : 100%;
-	left : 50%;
-	transform: translate(-50%, 0);
-}
-
-#setting_default, #setting_confirm {
-	color : White;
-	background-color : Indigo;
-	border: 0.5vw solid White;
-	border-radius: 2vw;
-	padding : 0.5vw 2vw;
-	font-weight : bold;
-}
-
-#setting_max-display {
-	height : 10vw;
-}
-
-.setting_input {
-	height : 5vw;
-	width : 10vw;
-	font-size : 4.2vw;
-	padding : 0.5vw 1.2vw;
-	border-radius: 1.6vw;
-	border : none;
-	text-align : center;
-}
-
-#setting_singer_display {
-	position: absolute;
-	top : 52.6vw;
-	font-size : 3vw;
-	left : 49vw;
-}
-
-#setting_singer_display:not(.scrollbar_present) {
-}
-
-#setting_singer_display.scrollbar_present {
-	/*left : 47vw;*/
-}
-
-/* slider switch from w3 school */
-.toggle_switch {
-	position: relative;
-	display: inline-block;
-	width: 12vw;
-	height: 6.8vw;
-	top : -4.5vw;
-	left : 2vw;
-}
-
-.toggle_switch input { 
-	opacity: 0;
-	width: 0;
-	height: 0;
-}
-
-.slider {
-	position: absolute;
-	cursor: pointer;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: #ccc;
-	-webkit-transition: .2s;
-	transition: .2s;
-	border-radius: 6.8vw;
-}
-
-.slider:before {
-	position: absolute;
-	content: "";
-	height: 5.2vw;
-	width: 5.2vw;
-	left: 0.8vw;
-	bottom: 0.8vw;
-	background-color: white;
-	-webkit-transition: .2s;
-	transition: .2s;
-	border-radius: 50%;
-}
-
-input:checked + .slider {
-	background-color: #2196F3;
-}
-
-input:focus + .slider {
-	/*box-shadow: 0 0 1px #2196F3;*/
-}
-
-input:checked + .slider:before {
-	-webkit-transform: translateX(5.2vw);
-	-ms-transform: translateX(5.2vw);
-	transform: translateX(5.2vw);
 }

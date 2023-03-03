@@ -64,13 +64,25 @@
 
 .search_options_subblock {
 	display : grid;
-	grid-template-columns: 45% 45%;
 	margin-bottom : 2vw;
 }
 
-.search_options_subblock>label {
+.search_grid_2 {
+	grid-template-columns: 45% 45%;
+}
+
+.search_grid_3 {
+	grid-template-columns: 20% 25% 45%;
+}
+
+.search_options_subblock.search_grid_2>label:not(#search_options_count) {
 	display : grid;
-	grid-template-columns: 16% 80%;
+	grid-template-columns: 6vw auto;
+}
+
+.search_options_subblock.search_grid_3>label {
+	display : grid;
+	grid-template-columns: 6vw auto;
 }
 
 .search_options_radio {
@@ -79,6 +91,16 @@
 
 .search_options_subblock .attr_name {
 	font-weight : bold;
+}
+
+#search_options_count_input {
+	height : 5vw;
+	width : 12vw;
+	font-size : 4.2vw;
+	padding : 0.5vw 1.2vw;
+	border-radius: 1.6vw;
+	border : 0.6vw solid Black;
+	text-align : center;
 }
 
 /* singer section */

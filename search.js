@@ -92,15 +92,17 @@ $(function() {
 			var clicked_id = $(this).attr("id").replace(/(search_options_)/, "");
 			var new_setting = clicked_id === "songname";
 			if (new_setting === searching_song_name) {
-				// do nothing
-			} else {
-				searching_song_name = new_setting;
-				$(".search_option_group1>.radio").toggleClass("selected");
-				$("#input").val("");
-				$("#input").attr("placeholder", searching_song_name ? "曲名/読みで検索" : "アーティスト名で検索");
-				$("#search_display").html("");
-				loading = "";
+				// nothing changed
+				return;
 			}
+			searching_song_name = new_setting;
+			$(".search_option_group1>.radio").toggleClass("selected");
+			$("#input").val("");
+			$("#input").attr("placeholder", searching_song_name ? "曲名/読みで検索" : "アーティスト名で検索");
+			$("#search_display").html("");
+			loading = "";
+			// disable / renable random
+			$("#nav_search_random").toggleClass("disabled", !searching_song_name);
 		});
 		
 		// search - options - sort - method
@@ -108,26 +110,70 @@ $(function() {
 			var clicked_id = $(this).attr("id").replace(/(search_options_)/, "");
 			var new_setting = clicked_id === "date";
 			if (search_sort_by_date === new_setting) {
-				// do nothing
-			} else {
-				search_sort_by_date = new_setting;
-				$(".search_option_group2>.radio").toggleClass("selected");
-				update_display();
-				$("#search_options_asd>.attr_name").html(search_sort_by_date ? "古い順" : "正順");
-				$("#search_options_des>.attr_name").html(search_sort_by_date ? "新しい順" : "逆順");
+				// nothing changed
+				return;
 			}
+			search_sort_by_date = new_setting;
+			$(".search_option_group2>.radio").toggleClass("selected");
+			update_display();
+			$("#search_options_asd>.attr_name").html(search_sort_by_date ? 
+			(search_sort_asd ? "古い順&nbsp;(⇌新しい順)" : "新しい順&nbsp;(⇌古い順)") : 
+			(search_sort_asd ? "正順&nbsp;(⇌逆順)" : "逆順&nbsp;(⇌正順)"));
 		});
 		
 		// search - options - sort - asd/des
 		$(document).on("click", ".search_option_group3", function() {
-			var clicked_id = $(this).attr("id").replace(/(search_options_)/, "");
-			var new_setting = clicked_id === "asd";
-			if (search_sort_asd === new_setting) {
-				// do nothing
-			} else {
-				search_sort_asd = new_setting;
-				$(".search_option_group3>.radio").toggleClass("selected");
-				update_display();
+			search_sort_asd　^= 1;
+			$("#search_options_btn_asd").toggleClass("selected");
+			$("#search_options_asd>.attr_name").html(search_sort_by_date ? 
+			(search_sort_asd ? "古い順&nbsp;(⇌新しい順)" : "新しい順&nbsp;(⇌古い順)") : 
+			(search_sort_asd ? "正順&nbsp;(⇌逆順)" : "逆順&nbsp;(⇌正順)"));
+			update_display();
+		});
+		
+		// search - options - others - max display
+		$(document).on("blur", "#search_options_count_input", function() {
+			var e = $("#search_options_count_input").val();
+			
+			// remove anything thats not 0~9
+			e = e.replace(/[^\d]/g, "");
+			
+			// check if e is blank (after replace)
+			if (e === "") {
+				$("#search_options_count_input").val(e);
+				return;
+			}
+			
+			// check min max
+			e = Math.min(400, Math.max(1, parseInt(e)));
+			$("#search_options_count_input").val(e);
+			max_display = e;
+			update_display();
+		});
+		
+		// search - options - others - max display - blur
+		$(document).on("keydown", function(e) {
+			if (e.keyCode === 13) {
+				$("#search_options_count_input").blur();
+			}
+		});
+		
+		// search - options - others
+		$(document).on("click", ".search_option_group4", function() {
+			var btn_id = $(this).attr("id").replace(/(search_options_)/, "");
+			$("#search_options_btn_" + btn_id).toggleClass("selected");
+			switch (btn_id) {
+				case "displayHidden" :
+					do_display_hidden ^= 1;
+					update_display();
+					break;
+				case "reset" :
+					do_clear_input ^= 1;
+					break;
+				case "randomAnyway" :
+					do_random_anyway ^= 1;
+					$("#nav_search_random").toggleClass("disabled", do_random_anyway ? false : loading !== "");
+					break;
 			}
 		});
 		
@@ -312,7 +358,7 @@ function search() {
 		$("#nav_search_random").addClass("disabled");
 	}
 	// replace wchar w/ char
-	e = e.normalize("NFKC");
+	e = e.normalize("NFKC").toLowerCase();
 	var series_name = "";
 	for (var i in series_lookup) {
 		for (var j in series_lookup[i]) {
@@ -355,30 +401,30 @@ function search() {
 					}
 				}
 			} else {
-				if (song[i][song_idx.name].normalize("NFKC").toLowerCase().includes(e.toLowerCase()) ||
-					song[i][song_idx.reading].toLowerCase().includes(e.toLowerCase())
+				if (song[i][song_idx.name].normalize("NFKC").toLowerCase().includes(e) ||
+					song[i][song_idx.reading].toLowerCase().includes(e)
 				) {
 					hits.push(i);
 				}
 			}
 		} else {
-			if (song[i][song_idx.artist].toLowerCase().includes(e.toLowerCase())) {
+			if (song[i][song_idx.artist].toLowerCase().includes(e)) {
 				hits.push(i);
 			}
 		}
 	}
 	// sort exact song name to top
 	hits.sort(function (a, b) {
-		if (song[a][song_idx.name].trim().toLowerCase() === e.toLowerCase()) {
+		if (song[a][song_idx.name].trim().toLowerCase() === e) {
 			// exist a record same to input
-			if (song[b][song_idx.name].trim().toLowerCase() === e.toLowerCase()) {
+			if (song[b][song_idx.name].trim().toLowerCase() === e) {
 				// if the other record is also same to input
 				return 0;
 			} else {
 				return -1;
 			}
 		} else {
-			if (song[b][song_idx.name].trim().toLowerCase() === e.toLowerCase()) {
+			if (song[b][song_idx.name].trim().toLowerCase() === e) {
 				return 1;
 			}
 		}

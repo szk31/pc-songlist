@@ -82,7 +82,7 @@ var video_idx = {
 	date : 1
 };
 
-var version = "1.2.2";
+var version = "1.2.3";
 
 /* control / memories */
 
@@ -98,13 +98,10 @@ var current_page = "search";
 var max_display = 100;
 
 // if on, display private entries despite not accessable
-var do_display_hidden = false;
+var do_display_hidden = true;
 
 // if the previous input should be cleared when user tap input box
 var do_clear_input = false;
-
-// if user prefer to text or picture selection
-var use_singer_icon = true;
 
 // if random requirement is ignored (input being blank)
 var do_random_anyway = false;
@@ -353,100 +350,6 @@ $(function() {
 			prevent_menu_popup = false;
 		}
 	});
-	
-	{ // setting
-		// setting - 0 : display maximum
-		$(document).on("input", "#setting_max-display_value", function() {
-			var e = $("#setting_max-display_value").val();
-			
-			// remove anything thats not 0~9
-			e = e.replace(/[^\d]/g, "");
-			
-			// check if e is blank (after replace)
-			if (e === "") {
-				$("#setting_max-display_value").val(e);
-				return;
-			}
-			
-			// check min max
-			e = Math.min(400, Math.max(1, parseInt(e)));
-			$("#setting_max-display_value").val(e);
-		});
-		
-		// setting - 0 - blur input
-		$(document).on("keydown", function(e) {
-			if (e.keyCode === 13) {
-				$("#setting_max-display_value").blur();
-			}
-		})
-		
-		// setting - 1 : do diplay hidden switch update
-		$(document).on("change", "#setting_display-private_checkbox", function(e) {
-			do_display_hidden = e.target.checked;
-		});
-		
-		// setting - 2 : reset input
-		$(document).on("change", "#setting_reset-input_checkbox", function(e) {
-			do_clear_input = e.target.checked;
-		});
-		
-		// setting - 3 : singer selection
-		$(document).on("change", "#setting_singer_checkbox", function(e) {
-			use_singer_icon = e.target.checked;
-			$("#setting_singer_display").html(use_singer_icon ? "アイコン" : "　名前　");
-		});
-		
-		// setting - 4 : ignore random requirement
-		$(document).on("change", "#setting_random_checkbox", function(e) {
-			do_random_anyway = e.target.checked;
-		});
-		
-		// setting - 90 : reset to default
-		$(document).on("click", "#setting_default", function(e) {
-			// prevent going back to top
-			e.preventDefault();
-			// revert value
-			max_display = 100;
-			do_display_hidden = false;
-			do_clear_input = false;
-			use_singer_icon = true;
-			do_random_anyway = false;
-			
-			// update display
-			$("#setting_max-display_value").val(max_display);
-			$("#setting_display-private_checkbox").prop("checked", do_display_hidden);
-			$("#setting_reset-input_checkbox").prop("checked", do_clear_input);
-			$("#setting_singer_checkbox").prop("checked", use_singer_icon);
-			$("#setting_singer_display").html(use_singer_icon ? "アイコン" : "　名前　");
-			$("#setting_random_checkbox").prop("checked", do_random_anyway);
-		});
-		
-		// setting - 91 : confirm
-		$(document).on("click", "#setting_confirm", function(e) {
-			// prevent going back to top
-			e.preventDefault();
-			$("#setting").addClass("hidden");
-			$("#popup_container").addClass("hidden");
-			$(document.body).removeClass("no_scroll");
-			prevent_menu_popup = false;
-			// assign values (those are not changed on edit)
-			max_display = parseInt($("#setting_max-display_value").val());
-			if (use_singer_icon) {
-				$(".singer_container").addClass("hidden");
-				$(".singer_icon_container").removeClass("hidden");
-			} else {
-				$(".singer_container").removeClass("hidden");
-				$(".singer_icon_container").addClass("hidden");
-			}
-			if (do_random_anyway) {
-				$("#nav_search_random").removeClass("disabled");
-			} else {
-				$("#nav_search_random").toggleClass("disabled", $("#input").val() !== "");
-			}
-			loading = "";
-			search();
-		});
-	}
 });
 
 function init() {
