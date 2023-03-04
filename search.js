@@ -162,7 +162,7 @@ $(function() {
 					break;
 				case "randomAnyway" :
 					do_random_anyway ^= 1;
-					$("#nav_search_random").toggleClass("disabled", do_random_anyway ? false : loading !== "");
+					$("#nav_search_random").toggleClass("disabled", searching_song_name ? (do_random_anyway ? false : loading !== "") : true);
 					break;
 			}
 		});
