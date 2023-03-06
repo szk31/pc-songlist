@@ -14,6 +14,15 @@
 	margin-top : 10vw;
 }
 
+#rep_input {
+    width: 96vw;
+    padding: 1vw 1vw;
+    margin: 1.5vw 2vw;
+    height: 10vw;
+    font-size: 5vw;
+	border-radius : 1.2vw;
+}
+
 #filter_container>div {
 	height : auto;
 	width : 92vw;
@@ -305,13 +314,28 @@
 	margin : 2vw 0vw;
 }
 
-.rep_list_control>.twitter {
-	left : 50%;
+.rep_list_control .twitter {
+	left : 70%;
 	transform: translate(50%, 0);
 }
 
 .rep_list_control>.disabled {
 	opacity: 0.4;
+}
+
+#rep_share_rap {
+	display : grid;
+	grid-template-columns: 80% 20%;
+}
+
+#rep_copy {
+	right : 0;
+	margin : 0.6vw;
+	width : 6vw;
+	height : 6vw;
+	content : url("icon/copy.png");
+	background-color : GhostWhite;
+	border-radius : 0.8vw;
 }
 
 /* general stuff */

@@ -82,7 +82,7 @@ var video_idx = {
 	date : 1
 };
 
-var version = "1.2.5";
+var version = "1.2.6";
 
 /* control / memories */
 
@@ -468,6 +468,19 @@ function get_attr(id) {
 		return "aca";
 	}
 	return "oke";
+}
+
+var copy_popup_is_displaying
+
+function copy_popup() {
+	if (!copy_popup_is_displaying) {
+		copy_popup_is_displaying = true;
+		$("#copy_popup").attr("class", "fade_out");
+		setTimeout(() => {
+			copy_popup_is_displaying = false;
+			$("#copy_popup").attr("class", "hidden");
+		}, 1500);
+	}
 }
 
 /*

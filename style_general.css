@@ -347,6 +347,41 @@ body.post_switch {
 	width: fit-content;
 }
 
+#copy_popup {
+	position : absolute;
+	padding : 2vw 4vw;
+	left : 50%;
+	bottom : 12vh;
+	transform: translate(-50%, 0);
+	background-color : rgba(1, 1, 1, 0.75);
+	width : auto;
+	height : auto;
+	font-size : 4vw;
+	color : White;
+	border-radius : 2vw;
+	text-align : center;
+	font-weight : bold;
+}
+
+#copy_popup.fade_out {
+	animation : rep_copy_fadeout 1.5s;
+	animation-fill-mode: both;
+}
+
+@keyframes rep_copy_fadeout {
+	0% {
+		opacity : 1;
+	}
+	
+	67% {
+		opacity : 1;
+	}
+	
+	100% {
+		opacity : 0;
+	}
+}
+
 /* scrollbar section */
 
 .scrollbar::-webkit-scrollbar-track {

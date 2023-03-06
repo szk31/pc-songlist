@@ -66,6 +66,18 @@ var rep_edit_selected = -1;
 
 $(function() {
 	{ // repertoire
+		// input - submit
+		$(document).on("blur", "#rep_input", function() {
+			rep_search();
+		});
+		
+		// input::enter -> blur
+		$(document).on("keydown", function(e) {
+			if (e.keyCode === 13 && current_page === "repertoire") {
+				$("#rep_input").blur();
+			}
+		});
+		
 		// filter - hide_block
 		$(document).on("click", ".filter_title", function() {
 			var e = $(this).attr("id").replace(/(filter_)|(_title)/g, "");
@@ -420,6 +432,16 @@ $(function() {
 			}
 			window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweet), "_blank");
 		});
+		
+		// display - copy
+		$(document).on("click", "#rep_copy", function() {
+			var content = "";
+			for (var i in rep_selected) {
+				content += (song[rep_selected[i]][song_idx.name] + ($("#list_artist_cb").hasClass("selected") ? (" / " + song[rep_selected[i]][song_idx.artist]) : "") + "\n");
+			}
+			navigator.clipboard.writeText(content);
+			copy_popup();
+		})
 	}
 });
 
@@ -427,8 +449,36 @@ var rep_hits = [];
 var rep_hits_count = 0;
 
 var rep_selected = [];
+var rep_input_memory = "";
 
 function rep_search() {
+	// check if input is empty
+	var input_value = $("#rep_input").val().normalize("NFKC").trim();
+	// check if input has been updated
+	if (input_value !== rep_input_memory) {
+		//console.log(input_value);
+		rep_input_memory = input_value;
+	} else if (input_value !== "") {
+		// if input didnt changed and is not blank
+		return;
+	}
+	if (rep_input_memory !== "") {
+		rep_hits = [];
+		rep_hits_count = 0;
+		// returning search result by input
+		for (var i = 1; i < song.length; ++i) {
+			if (entry_proc[i].length === 0) {
+				continue;
+			}
+			if (song[i][song_idx.name].toLowerCase().search(input_value.toLowerCase()) !== -1 ||
+				song[i][song_idx.reading].search(input_value) !== -1
+				) {
+				rep_hits[rep_hits_count++] = i;
+			}
+		}
+		rep_display();
+		return;
+	}
 	// all singer pre-load
 	var selected_member = 0;
 	for (var i in rep_singer) {

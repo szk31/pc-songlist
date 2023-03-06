@@ -105,6 +105,7 @@
 			<span id="search_display"></span>
 		</div>
 		<div id="repertoire_section" class="section_container hidden">
+			<input id="rep_input" type="text" placeholder="曲名で検索">
 			<div id="filter_container">
 				<div id="filter_entry">
 					<div id="filter_entry_title" class="filter_title">
@@ -316,7 +317,10 @@
 						</div>
 						<div id="rep_list_edit" class="row-1 col-2">編集</div>
 						<div id="rep_list_close" class="row-2 col1">閉じる</div>
-						<div id="rep_compose_tweet" class="twitter row-2 col-2">ツイート</div>
+						<div id="rep_share_rap" class="row-2 col-2">
+							<div id="rep_compose_tweet" class="twitter col-1">ツイート</div>
+							<div id="rep_copy" class="col-2"></div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -331,6 +335,7 @@
 				</div>
 			</div>
 		</div>
+		<div id="copy_popup" class="hidden">クリップボードに<br />保存しました</div>
 		<div id="search_auto" class="hidden"></div>
     </body>
 </html>

@@ -188,6 +188,7 @@ $(function() {
 		$(document).on("click", ".song_copy_icon", function() {
 			var e = parseInt($(this).attr("id").replace("copy_name_", ""));
 			navigator.clipboard.writeText(song[e][song_idx.name]);
+			copy_popup();
 		});
 		
 		// search - entry - share
