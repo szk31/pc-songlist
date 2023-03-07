@@ -42,7 +42,7 @@ $(function() {
 		
 		// search - input::enter -> blur
 		$(document).on("keydown", function(e) {
-			if (e.keyCode === 13) {
+			if (e.keyCode === 13 && current_page === "search") {
 				$("#input").blur();
 			}
 		});
@@ -441,12 +441,14 @@ function update_display() {
 	
 	var new_html = "";
 	var displayed = 0;
+	var found_entries = 0;
 	for (var i = 0; i < hits.length; ++i) {
 		// sort according to settings
 		var sorted_enrties = [];
 		sorted_enrties = entry_proc[hits[i]].sort((a, b) => {
 			return (search_sort_asd ? 1 : -1) * (search_sort_by_date ? (a - b) : (display_order[entry[a][entry_idx.type]] - display_order[entry[b][entry_idx.type]]));
 		});
+		found_entries += sorted_enrties.length;
 		for (var j = 0; j < sorted_enrties.length; ++j) {
 			var cur_entry = sorted_enrties[j];
 			// check if all member
@@ -528,6 +530,40 @@ function update_display() {
 			}
 		}
 	}
+	// dealing with a blank screen with non-blank input
+	do {
+		// if there already something to display
+		if (new_html !== "") {
+			break;
+		}
+		
+		// no song found
+		if (hits.length === 0) {
+			new_html += "<div class=\"search_no_result\">曲検索結果なし";
+			break;
+		}
+		
+		// only private songs are found
+		if (found_entries > 0) {
+			new_html += "<div class=\"search_no_result\">非公開動画のみ<br />(非公開非表示中)";
+			break;
+		}
+		
+		// only never sang songs are found
+		new_html += "<div class=\"search_no_result\">歌記録なし";
+		
+	} while (0);
+	
+	if (new_html === "") {
+		if (hits.length === 0) {
+			// no song found
+			
+		} else if (found_entries === 0) {
+			// only private songs are found
+			
+		}
+	}
+	
 	$("#search_display").html(new_html + "</div>");
 	// check all hiden songs
 	for (var i = 0; i < hide_song.length; ++i) {

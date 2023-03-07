@@ -82,7 +82,7 @@ var video_idx = {
 	date : 1
 };
 
-var version = "1.2.6";
+var version = "1.2.7";
 
 /* control / memories */
 
@@ -470,23 +470,16 @@ function get_attr(id) {
 	return "oke";
 }
 
-var copy_popup_is_displaying
+var copy_popup_is_displaying = false;
 
 function copy_popup() {
-	if (!copy_popup_is_displaying) {
-		copy_popup_is_displaying = true;
-		$("#copy_popup").attr("class", "fade_out");
-		setTimeout(() => {
-			copy_popup_is_displaying = false;
-			$("#copy_popup").attr("class", "hidden");
-		}, 1500);
+	if (copy_popup_is_displaying) {
+		return;
 	}
+	copy_popup_is_displaying = true;
+	$("#copy_popup").attr("class", "fade_out");
+	setTimeout(() => {
+		copy_popup_is_displaying = false;
+		$("#copy_popup").attr("class", "hidden");
+	}, 1500);
 }
-
-/*
- * to do
- * copied to clipboard message pop up
- *
- *
- *
- */

@@ -456,7 +456,6 @@ function rep_search() {
 	var input_value = $("#rep_input").val().normalize("NFKC").trim();
 	// check if input has been updated
 	if (input_value !== rep_input_memory) {
-		//console.log(input_value);
 		rep_input_memory = input_value;
 	} else if (input_value !== "") {
 		// if input didnt changed and is not blank

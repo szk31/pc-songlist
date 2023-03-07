@@ -405,3 +405,16 @@
 	font-size : 4.8vw;
 	height : 6vw;
 }
+
+/* no result */
+.search_no_result {
+	margin : 2vw 20vw;
+	padding : 2vw 3.2vw;
+	width : 53.6vw;
+	background-color : rgba(0.8, 0.6, 0.8, 0.75);
+	border-radius : 2vw;
+	font-size : 6vw;
+	font-weight : bold;
+	color : GhostWhite;
+	text-align : center;
+}
