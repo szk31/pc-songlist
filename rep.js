@@ -22,14 +22,7 @@ var rep_list = [];
 var rep_singer = [1, 1, 1];
 // singer selection method
 var rep_is_union = true;
-// attribute selection
-// (not used)
-var rep_attr = {
-	oke : 1,
-	aca : 1,
-	gui : 1,
-	asm : 1
-};
+
 // anisong selection
 var rep_anisong = {
 	lovelive : [1, 2],
@@ -105,7 +98,7 @@ $(function() {
 			}
 			rep_singer[f] ^= 1;
 			$(this).toggleClass("selected");
-			rep_search();
+			rep_search(true);
 		});
 		
 		// filter - singer - inter
@@ -117,7 +110,7 @@ $(function() {
 			rep_is_union ^= 1;
 			$(".singer_checkbox").removeClass("selected");
 			$("#singer_" + e).addClass("selected");
-			rep_search();
+			rep_search(true);
 		});
 		
 		// filter - entry - attr
@@ -451,13 +444,13 @@ var rep_hits_count = 0;
 var rep_selected = [];
 var rep_input_memory = "";
 
-function rep_search() {
+function rep_search(force = false) {
 	// check if input is empty
 	var input_value = $("#rep_input").val().normalize("NFKC").trim();
 	// check if input has been updated
 	if (input_value !== rep_input_memory) {
 		rep_input_memory = input_value;
-	} else if (input_value !== "") {
+	} else if (!force && input_value !== "") {
 		// if input didnt changed and is not blank
 		return;
 	}
@@ -511,7 +504,7 @@ function rep_search() {
 		if (song[i][song_idx.attr] & mask) {
 			if (inv_mask != 0) {
 				// remove song thats deselected
-				if ((song[i][song_idx.attr] & inv_mask)) {
+				if (song[i][song_idx.attr] & inv_mask) {
 					continue;
 				}
 			}
@@ -591,20 +584,20 @@ function rep_display() {
 			console.log("rep_sort of type \"" + rep_sort + "\" not found");
 			return;
 	}
-	//console.log(rep_hits);
 	// actual displaying
 	for (var i = 0; i < rep_hits.length; ++i) {
 		// sang count
 		var sang_count = get_sang_count(rep_hits[i], selected_member);
 		// container div
-		var new_html = "<div class=\"rep_song_container" + (rep_selected.includes(rep_hits[i]) ? " selected" : "") + (sang_count[0] === sang_count[1] ? " rep_mem_only" : "") + "\" id=\"rep_song_" + rep_hits[i] + "\">";
+		var new_html = "<div class=\"rep_song_container" + (rep_selected.includes(rep_hits[i]) ? " selected" : "") + ((sang_count[0] > 0) && (sang_count[0] === sang_count[1]) ? " rep_mem_only" : "") + "\" id=\"rep_song_" + rep_hits[i] + "\">";
 		// title
 		new_html += ("<div class=\"rep_song_title\">" + song[rep_hits[i]][song_idx.name] + " / " + song[rep_hits[i]][song_idx.artist] + "</div>");
 		// info line1
 		new_html += "<div class=\"rep_song_info grid_block-4\">";
 		// last sang
-		var delta_last = get_date_different(get_last_sang(rep_hits[i], selected_member));
-		new_html += ("<div>" + (delta_last === 0 ? "今日" : (delta_last + "日前")) + "</div>");
+		var last_sang = get_last_sang(rep_hits[i], selected_member);
+		var delta_last = last_sang === 0 ? -1 : get_date_different(last_sang);
+		new_html += ("<div>" + (delta_last === 0 ? "今日" : delta_last === -1 ? "---" : (delta_last + "日前")) + "</div>");
 		// count
 		new_html += ("<div>" + sang_count[0] + "回" + (sang_count[1] > 0 ? (sang_count[0] === sang_count[1] ? " (メン限のみ)" : " (" + sang_count[1] + "回メン限)") : "") + "</div>");
 		// type
@@ -661,9 +654,9 @@ function rep_update_list() {
 function rep_update_leftbar() {
 	// reset
 	$(".rep_list_item").attr("class", "rep_list_item");
-		$(".rep_list_delete").addClass("hidden");
+	$(".rep_list_delete").addClass("hidden");
 	if (rep_edit_selected >= 0) {
-		// hiden everything
+		// hide everything
 		$(".rep_list_item").addClass("blank");
 		
 		// display

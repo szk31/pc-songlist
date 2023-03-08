@@ -215,7 +215,7 @@ $(function() {
 var hits = [];
 
 function auto_search() {
-	var e = $("#input").val().normalize("NFKC").toLowerCase().replaceAll(/\u3094/g, "ヴ");
+	var e = $("#input").val().normalize("NFKC").toLowerCase().trim();
 	if (e === "" || !searching_song_name) {
 		$("#search_auto").addClass("hidden");
 		return;
