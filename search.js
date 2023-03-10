@@ -203,10 +203,15 @@ $(function() {
 					// title of unlisted / private video are returned a 401 error
 					if (data.title === undefined) {
 						alert("再アップ/非公開の動画を共有しないで下さい。");
-					} else {
-						var tweet = song[entry[entry_id][entry_idx.song_id]][song_idx.name].trim() + " / " + song[entry[entry_id][entry_idx.song_id]][song_idx.artist] + " @" + data.title + "\n(youtu.be/" + video[entry[entry_id][entry_idx.video]][video_idx.id] + "?t=" + entry[entry_id][entry_idx.time] + ")";
-						window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweet), "_blank");
+						return;
 					}
+					var tweet = "";
+					if (entry[entry_id][entry_idx.time] === 0) {
+						tweet = data.title + "\n(youtu.be/" + video[entry[entry_id][entry_idx.video]][video_idx.id] + ")";
+					} else {
+						tweet = song[entry[entry_id][entry_idx.song_id]][song_idx.name].trim() + " / " + song[entry[entry_id][entry_idx.song_id]][song_idx.artist] + " @" + data.title + "\n(youtu.be/" + video[entry[entry_id][entry_idx.video]][video_idx.id] + timestamp(entry_id) + ")";
+					}
+					window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweet), "_blank");
 			  });
 		});
 	}
@@ -536,33 +541,19 @@ function update_display() {
 		if (new_html !== "") {
 			break;
 		}
-		
 		// no song found
 		if (hits.length === 0) {
 			new_html += "<div class=\"search_no_result\">曲検索結果なし";
 			break;
 		}
-		
 		// only private songs are found
 		if (found_entries > 0) {
 			new_html += "<div class=\"search_no_result\">非公開動画のみ<br />(非公開非表示中)";
 			break;
 		}
-		
 		// only never sang songs are found
 		new_html += "<div class=\"search_no_result\">歌記録なし";
-		
 	} while (0);
-	
-	if (new_html === "") {
-		if (hits.length === 0) {
-			// no song found
-			
-		} else if (found_entries === 0) {
-			// only private songs are found
-			
-		}
-	}
 	
 	$("#search_display").html(new_html + "</div>");
 	// check all hiden songs
