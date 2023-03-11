@@ -72,7 +72,7 @@
 }
 
 .search_grid_3 {
-	grid-template-columns: 20% 25% 45%;
+	grid-template-columns: 20% 25% 55%;
 }
 
 .search_options_subblock.search_grid_2>label:not(#search_options_count) {

@@ -450,9 +450,18 @@ function update_display() {
 	for (var i = 0; i < hits.length; ++i) {
 		// sort according to settings
 		var sorted_enrties = [];
-		sorted_enrties = entry_proc[hits[i]].sort((a, b) => {
-			return (search_sort_asd ? 1 : -1) * (search_sort_by_date ? (a - b) : (display_order[entry[a][entry_idx.type]] - display_order[entry[b][entry_idx.type]]));
-		});
+		if (search_sort_by_date) {
+			sorted_enrties = entry_proc[hits[i]].sort((a, b) => {
+				return (search_sort_asd ? a - b : b - a);
+			});
+		} else {
+			sorted_enrties = entry_proc[hits[i]].sort((a, b) => {
+				if (entry[a][entry_idx.type] === entry[b][entry_idx.type]) {
+					return a - b;
+				}
+				return (search_sort_asd ? 1 : -1) * (display_order[entry[a][entry_idx.type]] - display_order[entry[b][entry_idx.type]])
+			});
+		}
 		found_entries += sorted_enrties.length;
 		for (var j = 0; j < sorted_enrties.length; ++j) {
 			var cur_entry = sorted_enrties[j];
