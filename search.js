@@ -555,9 +555,9 @@ function update_display() {
 			new_html += "<div class=\"search_no_result\">曲検索結果なし";
 			break;
 		}
-		// only private songs are found
+		// only private songs are found / singer deselected
 		if (found_entries > 0) {
-			new_html += "<div class=\"search_no_result\">非公開動画のみ<br />(非公開非表示中)";
+			new_html += "<div class=\"search_no_result\">非表示動画のみ";
 			break;
 		}
 		// only never sang songs are found
